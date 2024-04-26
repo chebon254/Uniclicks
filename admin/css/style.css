@@ -700,15 +700,19 @@ button.side-btn-logout:hover,
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin: 0px 0px 0px 10px;
+    margin: 0px 0px 0px 0px;
 }
 .add-offer button{
-    padding: 20px;
+    height: 40px;
+    width: 40px;
+    padding: 10px;
     background-color: var(--success);
     color: var(--crystal);
     outline: none;
     cursor: pointer;
+    border-radius: 2px;
     border: 0px;
+    margin: 0px 0px 0px 10px;
 }
 .exloretb-form, .prizestb-form{
     position: absolute;
