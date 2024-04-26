@@ -1,0 +1,239 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+    font-family: "Inter", sans-serif;
+}
+:root{
+    --raven: #000000; /* deep black */
+    --whisper: #f6f6f9;
+    --crystal: #ffffff; /* pure white */
+    --ink: #000000; /* bold text */
+    --mist: #5D606F; /* light text */
+    --verdant: #269D70; /* active */
+    --sable: #11211F; /* button background */
+    --twilight: #25262C; /* footer background */
+    --success: #269D70; /* verdant */
+    --danger: #FF0000; /* red */
+}
+html {
+    scroll-behavior: smooth;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw !important;
+}
+body{
+    background-color: var(--whisper);
+}
+.container{
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+/* == SCROLL BAR == */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+@media only screen and (max-width: 788px){
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: var(--crystal);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--verdant);
+}
+/* == || SCROLL BAR == */
+
+
+/* == FORMS == */
+/* == Login == */
+body.login-pg{
+    height: 100vh;
+    width: 100vw;
+}
+main.login-pg{
+    height: 100%;
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-pg-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: var(--crystal);
+    border-radius: 20px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+}
+.login-pg-container .card{
+    width: 100%;
+    max-width: 580px;
+    min-width: 260px;
+    margin: 16px 0px;
+}
+.login-pg-container .card.one{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-pg-container .card.one img{
+    width: 80%;
+}
+.login-pg-container .card form{
+    width: 100%;
+}
+.form-control {
+    padding: 10px 0px;
+    width: 100%;
+}
+.form-control .message{
+    min-height: 28px;
+    padding: 4px 0px;
+    text-align: center;
+}
+.form-control .message #errorMessage{
+    color: var(--danger);
+}
+.form-control .message #successMessage{
+    color: var(--success);
+}
+.form-control.text-center{
+    text-align: center;
+}
+.form-control.text-center h1{
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-top: 10px;
+}
+.form-control label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+}
+  
+.form-control input {
+    height: 50px;
+    width: 100%;
+    outline: none;
+    border: 1px solid #f2f0f9;
+    border-radius: 16px;
+    padding: 0px 16px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+}
+.input-container {
+    position: relative;
+}
+
+.input-container input {
+    padding-left: 40px; /* Make room for the eye icon */
+}
+
+.input-container i.fa-user-shield {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--verdant);
+}
+
+.password-container {
+    height: 50px;
+    position: relative;
+}
+
+.password-container input {
+    padding: 0px 30px 0px 40px;
+}
+
+.password-container i.fa-shield-halved {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--verdant);
+}
+.password-container i.fa-eye-slash {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.password-container i.fa-eye {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+button.login-btn {
+    height: 60px;
+    width: 100%;
+    outline: none;
+    border: 0px;
+    margin-top: 28px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--crystal);
+    border-radius: 10px;
+    padding: 0px 16px;
+    background-color: var(--sable);
+}
+button.login-btn:hover {
+    background-color: var(--verdant);
+    color: var(--crystal);
+} 
+p.back-link{
+    text-align: center;
+    font-weight: 500;
+    margin: 20px 0px 0px;
+}
+p.back-link a{
+    padding: 5px 10px;
+    font-weight: 500;
+    color: var(--verdant);
+}
+p.back-link a:hover{
+    color: var(--sable);
+}
+/* == || Login == */
+
+/* == || FORMS == */
+
+
+
+/* == Dashboard == */
+main.dashboard-pg{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.dash-tab-content{
+    display: none;
+}
+.tab-btn.active{
+    color: red;
+}
+/* == || Dashboard == */

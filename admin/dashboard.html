@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- == META OG Social Media Ads == -->
+    <meta property="og:title" content="Uniclicks" />
+    <meta property="og:url" content="https://uniclicks.com" />
+    <meta property="og:image" content="https://uniclicks.com/admin/css/img/social media/Facebook.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:desc revealription" content="We Grow Together With Each Click" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@uniclicks">
+    <meta name="twitter:title" content="Uniclicks">
+    <meta name="twitter:desc revealription" content="We Grow Together With Each Click">
+    <meta name="twitter:image" content="https://uniclicks.com/admin/css/img/social media/Twitter.png">
+    <meta name="twitter:player" content="https://uniclicks.com">
+    <meta name="twitter:player:width" content="280">
+    <meta name="twitter:player:height" content="150">
+
+    <title>Uniclicks Dashboard</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="css/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="css/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="css/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="css/favicon/favicon-16x16.png">
+    <link rel="manifest" href="css/favicon/site.webmanifest">
+    <link rel="mask-icon" href="css/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="css/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="css/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="css/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- == Style Sheet == -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- == Fonts == -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- == Icons == -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" />
+
+</head>
+
+<body>
+    <main class="dashboard-pg">
+        <div class="side-navigation">
+            <div class="side-logo">
+                <img src="css/favicon/apple-touch-icon-76x76-precomposed.png" alt="Uniclicks">
+                <img src="css/img/logo.svg" alt="Uniclicks">
+            </div>
+            <div class="side-menu">
+                <h2>Quick Menu</h2>
+                <button class="dash-menu-btn tab-btn active" onclick="openTab(event, 'dashboardtb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <div class="btn-text">
+                        Dashboard
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'exploretb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <div class="btn-text">
+                        Explore
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'accountstb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-user-lock"></i>
+                    </div>
+                    <div class="btn-text">
+                        Accounts
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'contactstb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-id-card-clip"></i>
+                    </div>
+                    <div class="btn-text">
+                        Contacts
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'prizestb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="btn-text">
+                        Prizes
+                    </div>
+                </button>
+                <h2>Settings</h2>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'chartstb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div class="btn-text">
+                        Charts
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'trendstb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <div class="btn-text">
+                        Trends
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'billingtb')">
+                    <div class="btn-icon">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <div class="btn-text">
+                        Billing
+                    </div>
+                </button>
+                <button>
+                    <i class="fa-solid fa-circle-arrow-left"></i> Logout
+                </button>
+                <div class="side-menu-infocard">
+                    <div class="circle"></div>
+                    <div class="icon">
+                        <i class="fa-regular fa-circle-question"></i>
+                    </div>
+                    <div class="text">
+                        <h3>Need Help?</h3>
+                        <p>Having trouble using Uniclicks dashboard?</p>
+                        <button>Watch Tutorial</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <div class="dash-header">
+                <div class="header-txt">
+                    <h1>Welcome to Uniclicks</h1>
+                    <p>Hello, Ido. Welcome back!</p>
+                </div>
+                <div class="header-account">
+                    <div class="notifications">
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="account-profile">
+                        <img src="css/img/" alt="Uniclicks">
+                        <div class="drop-menus">
+                            <a href="#">Settings</a>
+                            <a href="#">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dash-tabs">
+                <div id="dashboardtb" class="dashboard-tab dash-tab-content" style="display: block;">
+                    Dash Tab
+                </div>
+                <div id="exploretb" class="explore-tab dash-tab-content">
+                    Explore Tab
+                </div>
+                <div id="accountstb" class="accounts-tab dash-tab-content">
+                    Accounts Tab
+                </div>
+                <div id="contactstb" class="contacts-tab dash-tab-content">
+                    Contacts Tab
+                </div>
+                <div id="prizestb" class="prizes-tab dash-tab-content">
+                    Prizes Tab
+                </div>
+                <div id="chartstb" class="charts-tab dash-tab-content">
+                    charts Tab
+                </div>
+                <div id="trendstb" class="trends-tab dash-tab-content">
+                    Trrends Tab
+                </div>
+                <div id="billingtb" class="billing-tab dash-tab-content">
+                    Billing Tab
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- == Scripts == -->
+    <script src="js/script.js" defer></script>
+</body>
+
+</html>
