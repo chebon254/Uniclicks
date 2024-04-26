@@ -541,19 +541,35 @@ button.side-btn-logout:hover,
     margin: 40px 0px;
     background-color: #ffffff;
   }
+  thead{
+    background-color: var(--verdant);
+    color: var(--crystal) !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600 !important;
+  }
+  th {
+    height: 60px;
+    padding: 10px 10px 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid #d9d5ec;
+    color: var(--crystal);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+  }
   iframe {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
   }
-  th,
   td {
     height: 60px;
     padding: 10px 10px 10px 20px;
     text-align: left;
     border-bottom: 1px solid #d9d5ec;
     color: var(--sable);
-    font-size: 14px;
+    font-size: 16px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
     line-height: normal;
   }
   td:first-child {
@@ -563,7 +579,7 @@ button.side-btn-logout:hover,
     font-weight: 600;
   }
   tbody tr:hover {
-    background-color: #f2f0f9;
+    background-color: #269D7011;
   }
   tr.last {
     height: 20px !important;
