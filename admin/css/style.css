@@ -527,6 +527,7 @@ button.side-btn-logout:hover,
 
 .dash-tab-content {
     display: none;
+    position: relative;
 }
 .dash-campaign{
     margin-top: 28px;
@@ -576,7 +577,7 @@ button.side-btn-logout:hover,
     max-width: 280px;
     border-radius: 10px;
     padding: 36px 16px 16px;
-    background-color: #269D7011;
+    background-color: #269D7033;
     margin: 0px 0px 0px 10px;
 }
 .stats .cards{
@@ -694,4 +695,61 @@ button.side-btn-logout:hover,
     color: #FF609A;
   }
   /* == TABLES == */
+/* == TAB content forms == */
+.add-offer{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0px 0px 0px 10px;
+}
+.add-offer button{
+    padding: 20px;
+    background-color: var(--success);
+    color: var(--crystal);
+    outline: none;
+    cursor: pointer;
+    border: 0px;
+}
+.exloretb-form, .prizestb-form{
+    position: absolute;
+    top: 0px;
+    left:0px;
+    background-color: #00000000;
+    height: 100%;
+    width: 100%;
+    display: none;
+}
+.exloretb-form .inner, .prizestb-form .inner{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.form-container{
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    padding: 16px;
+    border-radius: 20px;
+    background-color: var(--crystal);
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+}
+.cancel-btn-form{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    cursor: pointer;
+    outline: none;
+    border: 0px;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+}
+.cancel-btn-form:hover{
+    color: var(--crystal);
+    background-color: var(--success);
+}
+/* == TAB content forms == */
 /* == || Dashboard == */

@@ -259,10 +259,45 @@
                     </div>
                 </div>
                 <div id="exploretb" class="explore-tab dash-tab-content">
+                    <div class="exloretb-form">
+                        <div class="inner">
+                            <div class="form-container">
+                                <button class="cancel-btn-form" id="cancel-btn-form">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                <form action="">
+                                    <div class="form-control text-center">
+                                        <h1>Add an Offer</h1>
+                                        <div class="message">
+                                            <p id="errorMessage">Error</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-control">
+                                        <label>Offer</label>
+                                        <br>
+                                        <input type="text" name="offer-name" placeholder="Enter offer">
+                                    </div>
+                                    <div class="form-control">
+                                        <label>Monthly-clicks</label>
+                                        <br>
+                                        <input type="text" name="monthly-clicks-name" id="monthly-clicks" placeholder="Enter monthly-clicks" required>
+                                    </div>
+                                    <div class="form-control">
+                                        <label>Monthly-payouts</label>
+                                        <br>
+                                        <input type="text" name="monthly-payouts-name" placeholder="Enter monthly-payouts">
+                                    </div>
+                                    <div class="form-control">
+                                        <button class="login-btn" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <h2>Top Offers</h2>
                     <div class="add-offer">
                         <span>Add a new Offer</span>
-                        <button><i class="fa-solid fa-plus"></i></button>
+                        <button id="add-offers-btn"><i class="fa-solid fa-plus"></i></button>
                     </div>
                     <table>
                         <thead>
@@ -507,10 +542,45 @@
                       
                 </div>
                 <div id="prizestb" class="prizes-tab dash-tab-content">
+                    <div class="prizestb-form">
+                        <div class="inner">
+                            <div class="form-container">
+                                <button class="cancel-btn-form" id="prizestbcancel-btn-form">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                <form action="">
+                                    <div class="form-control text-center">
+                                        <h1>Add a prize</h1>
+                                        <div class="message">
+                                            <p id="errorMessage">Error</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-control">
+                                        <label>Name</label>
+                                        <br>
+                                        <input type="text" name="prize" placeholder="Enter name">
+                                    </div>
+                                    <div class="form-control">
+                                        <label>Price</label>
+                                        <br>
+                                        <input type="text" name="price" placeholder="Enter price">
+                                    </div>
+                                    <div class="form-control">
+                                        <label>Probability out of 5</label>
+                                        <br>
+                                        <input type="number" name="price" placeholder="Enter probability">
+                                    </div>
+                                    <div class="form-control">
+                                        <button class="login-btn" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <h2>Prizes won!</h2>
                     <div class="add-offer">
                         <span>Add a new Offer</span>
-                        <button><i class="fa-solid fa-plus"></i></button>
+                        <button id="prizestb-add-prize-btn"><i class="fa-solid fa-plus"></i></button>
                     </div>
                     <table>
                         <thead>

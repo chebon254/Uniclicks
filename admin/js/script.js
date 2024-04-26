@@ -76,5 +76,48 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-  
+document.addEventListener("DOMContentLoaded", function() {
+  // Add event listener to the button to display the form
+  document.getElementById("add-offers-btn").addEventListener("click", function() {
+    // Get the form container
+    var formContainer = document.querySelector(".exloretb-form");
+    // Set its display property to "block"
+    formContainer.style.display = "block";
+  });
+
+  // Check if the cancel button exists before adding event listener
+  var cancelButton = document.getElementById("cancel-btn-form");
+  if (cancelButton) {
+    // Add event listener to the cancel button in the form
+    cancelButton.addEventListener("click", function() {
+      // Get the form container
+      var formContainer = document.querySelector(".exloretb-form");
+      // Set its display property back to "none" to hide it
+      formContainer.style.display = "none";
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Add event listener to the button to display the form
+  document.getElementById("prizestb-add-prize-btn").addEventListener("click", function() {
+    // Get the form container
+    var formContainer = document.querySelector(".prizestb-form");
+    // Set its display property to "block"
+    formContainer.style.display = "block";
+  });
+
+  // Check if the cancel button exists before adding event listener
+  var cancelButton = document.getElementById("prizestbcancel-btn-form");
+  if (cancelButton) {
+    // Add event listener to the cancel button in the form
+    cancelButton.addEventListener("click", function() {
+      // Get the form container
+      var formContainer = document.querySelector(".prizestb-form");
+      // Set its display property back to "none" to hide it
+      formContainer.style.display = "none";
+    });
+  }
+});
+
 /* == || Dashboard == */
