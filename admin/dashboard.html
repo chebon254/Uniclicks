@@ -45,7 +45,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 
     <!-- == Icons == -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        crossorigin="anonymous" />
 
 </head>
 
@@ -57,6 +58,8 @@
                 <img class="logo" src="css/img/logo.svg" alt="Uniclicks">
             </div>
             <div class="side-menu">
+                <br>
+                <br>
                 <h3>Quick Menu</h3>
                 <button class="dash-menu-btn tab-btn active" onclick="openTab(event, 'dashboardtb')">
                     <div class="contents">
@@ -108,6 +111,9 @@
                         </div>
                     </div>
                 </button>
+                <br>
+                <br>
+                <br>
                 <h3>Settings</h3>
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'chartstb')">
                     <div class="contents">
@@ -139,11 +145,15 @@
                         </div>
                     </div>
                 </button>
+                <br>
+                <br>
                 <button class="side-btn-logout">
                     <i class="fa-solid fa-circle-arrow-left"></i> Logout
                 </button>
+                <br>
+                <br>
+                <br>
                 <div class="side-menu-infocard">
-                    <div class="circle"></div>
                     <div class="icon">
                         <i class="fa-regular fa-circle-question"></i>
                     </div>
@@ -162,12 +172,31 @@
                     <p>Hello, Ido. Welcome back!</p>
                 </div>
                 <div class="header-account">
-                    <div class="notifications">
-                        <div class="status-dot"></div>
+                    <div class="nav-item">
+                        <a href="#" class="message-icon">
+                            <i class="fa fa-envelope"></i>
+                            <span class="badge">3</span>
+                        </a>
+                        <div class="dropdown-menu message-dropdown">
+                            <!-- Message previews will be added here dynamically -->
+                        </div>
                     </div>
-                    <div class="account-profile">
-                        <img src="css/img/" alt="Uniclicks">
-                        <div class="drop-menus">
+
+                    <div class="nav-item">
+                        <a href="#" class="notification-icon">
+                            <i class="fa fa-bell"></i>
+                            <span class="badge">2</span>
+                        </a>
+                        <div class="dropdown-menu notification-dropdown">
+                            <!-- Notification items will be added here dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="nav-item">
+                        <a href="#" class="profile-icon">
+                            <img src="css/img/profile.png" alt="Profile Picture">
+                        </a>
+                        <div class="dropdown-menu profile-dropdown">
                             <a href="#">Settings</a>
                             <a href="#">Logout</a>
                         </div>
@@ -179,16 +208,314 @@
                     Dash Tab
                 </div>
                 <div id="exploretb" class="explore-tab dash-tab-content">
-                    Explore Tab
+                    <h2>Top Offers</h2>
+                    <div class="add-offer">
+                        <span>Add a new Offer</span>
+                        <button><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Offer</th>
+                                <th>Monthly clicks</th>
+                                <th>Monthly Payouts</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Financial Lead Gen US</td>
+                                <td>3,150</td>
+                                <td>$21,440</td>
+                                <td>
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Casino DACH</td>
+                                <td>2,320</td>
+                                <td>$29,400</td>
+                                <td>
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Casino CA</td>
+                                <td>380</td>
+                                <td>$19,800</td>
+                                <td>
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Sweepstakes US</td>
+                                <td>11,235</td>
+                                <td>$25,750</td>
+                                <td>
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Nutra US</td>
+                                <td>3,990</td>
+                                <td>$12,300</td>
+                                <td>
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div id="accountstb" class="accounts-tab dash-tab-content">
-                    Accounts Tab
+                    <h2>User Accounts</h2>
+                    <div class="add-offer">
+                        <span>Add a new Offer</span>
+                        <button><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Password</th>
+                            <th>Remove</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>johndoe@example.com</td>
+                            <td>123-456-7890</td>
+                            <td>********</td>
+                            <td><i class="far fa-trash-can"></i></td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>janesmith@example.com</td>
+                            <td>987-654-3210</td>
+                            <td>********</td>
+                            <td><i class="far fa-trash-can"></i></td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>Michael Johnson</td>
+                            <td>michael@example.com</td>
+                            <td>555-555-5555</td>
+                            <td>********</td>
+                            <td><i class="far fa-trash-can"></i></td>
+                          </tr>
+                          <tr>
+                            <td>4</td>
+                            <td>Sarah Brown</td>
+                            <td>sarah@example.com</td>
+                            <td>111-222-3333</td>
+                            <td>********</td>
+                            <td><i class="far fa-trash-can"></i></td>
+                          </tr>
+                          <tr>
+                            <td>5</td>
+                            <td>David Lee</td>
+                            <td>david@example.com</td>
+                            <td>444-444-4444</td>
+                            <td>********</td>
+                            <td><i class="far fa-trash-can"></i></td>
+                          </tr>
+                          <tr>
+                            <td>6</td>
+                            <td>Emily Wilson</td>
+                            <td>emily@example.com</td>
+                            <td>777-777-7777</td>
+                            <td>********</td>
+                            <td><i class="far fa-trash-can"></i></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
                 </div>
                 <div id="contactstb" class="contacts-tab dash-tab-content">
-                    Contacts Tab
+                    <h2>Contact Data</h2>
+                    <div class="add-offer">
+                        <span>Add a new Offer</span>
+                        <button><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Company</th>
+                            <th>Communication</th>
+                            <th>ID</th>
+                            <th>Message</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>johndoe@example.com</td>
+                            <td>ABC Company</td>
+                            <td>WhatsApp</td>
+                            <td>1234567890</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>janesmith@example.com</td>
+                            <td>XYZ Corporation</td>
+                            <td>Telegram</td>
+                            <td>@janesmith</td>
+                            <td>Consectetur adipiscing elit</td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>Michael Johnson</td>
+                            <td>michael@example.com</td>
+                            <td>123 Industries</td>
+                            <td>Email</td>
+                            <td>michael@example.com</td>
+                            <td>Sed do eiusmod tempor incididunt</td>
+                          </tr>
+                          <tr>
+                            <td>4</td>
+                            <td>Sarah Brown</td>
+                            <td>sarah@example.com</td>
+                            <td>Smith & Co.</td>
+                            <td>Skype</td>
+                            <td>sarah_brown</td>
+                            <td>Ut labore et dolore magna aliqua</td>
+                          </tr>
+                          <tr>
+                            <td>5</td>
+                            <td>David Lee</td>
+                            <td>david@example.com</td>
+                            <td>Lee Enterprises</td>
+                            <td>WhatsApp</td>
+                            <td>0987654321</td>
+                            <td>Ut enim ad minim veniam</td>
+                          </tr>
+                          <tr>
+                            <td>6</td>
+                            <td>Emily Wilson</td>
+                            <td>emily@example.com</td>
+                            <td>Wilson Group</td>
+                            <td>Email</td>
+                            <td>emily@example.com</td>
+                            <td>Quis nostrud exercitation ullamco</td>
+                          </tr>
+                          <tr>
+                            <td>7</td>
+                            <td>James Taylor</td>
+                            <td>james@example.com</td>
+                            <td>Taylor Corporation</td>
+                            <td>Telegram</td>
+                            <td>@jamestaylor</td>
+                            <td>Laboris nisi ut aliquip ex ea commodo</td>
+                          </tr>
+                          <tr>
+                            <td>8</td>
+                            <td>Emma Clark</td>
+                            <td>emma@example.com</td>
+                            <td>Clark Industries</td>
+                            <td>Skype</td>
+                            <td>emma_clark</td>
+                            <td>Duis aute irure dolor in reprehenderit</td>
+                          </tr>
+                          <tr>
+                            <td>9</td>
+                            <td>Daniel Brown</td>
+                            <td>daniel@example.com</td>
+                            <td>Brown Enterprises</td>
+                            <td>Email</td>
+                            <td>daniel@example.com</td>
+                            <td>Excepteur sint occaecat cupidatat non proident</td>
+                          </tr>
+                          <tr>
+                            <td>10</td>
+                            <td>Lisa Miller</td>
+                            <td>lisa@example.com</td>
+                            <td>Miller Group</td>
+                            <td>WhatsApp</td>
+                            <td>5678901234</td>
+                            <td>Sunt in culpa qui officia deserunt</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
                 </div>
                 <div id="prizestb" class="prizes-tab dash-tab-content">
-                    Prizes Tab
+                    <h2>Prizes won!</h2>
+                    <div class="add-offer">
+                        <span>Add a new Offer</span>
+                        <button><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Prize Won</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>johndoe@example.com</td>
+                            <td>Gold</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>janesmith@example.com</td>
+                            <td>Slider</td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>Michael Johnson</td>
+                            <td>michael@example.com</td>
+                            <td>Gold</td>
+                          </tr>
+                          <tr>
+                            <td>4</td>
+                            <td>Sarah Brown</td>
+                            <td>sarah@example.com</td>
+                            <td>Diamond</td>
+                          </tr>
+                          <tr>
+                            <td>5</td>
+                            <td>David Lee</td>
+                            <td>david@example.com</td>
+                            <td>Slider</td>
+                          </tr>
+                          <tr>
+                            <td>6</td>
+                            <td>Emily Wilson</td>
+                            <td>emily@example.com</td>
+                            <td>Gold</td>
+                          </tr>
+                          <tr>
+                            <td>7</td>
+                            <td>Lisa Miller</td>
+                            <td>lisa@example.com</td>
+                            <td>Diamond</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
                 </div>
                 <div id="chartstb" class="charts-tab dash-tab-content">
                     charts Tab
