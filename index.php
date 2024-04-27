@@ -4,6 +4,60 @@ include './admin/connect/database.php';
 // Fetch contact form data
 $top_offers = "SELECT `id`, `offer`, `monthly_clicks`, `monthly_payouts` FROM `top_offers`";
 $result_offers = $conn->query($top_offers);
+
+// Fetch past events
+$past_events_query = "SELECT `id`, `title`, `location`, `start_date`, `end_date`, `thumbnail` FROM `events` WHERE end_date < CURDATE()";
+$past_events_result = $conn->query($past_events_query);
+
+// Fetch upcoming events
+$upcoming_events_query = "SELECT `id`, `title`, `location`, `start_date`, `end_date`, `thumbnail` FROM `events` WHERE end_date >= CURDATE()";
+$upcoming_events_result = $conn->query($upcoming_events_query);
+
+// Initialize error message
+$error = "";
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Fetch and sanitize form data
+    $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+
+    // SQL to insert user data into the database
+    $sql = "INSERT INTO signup_users (full_name, email, phone) VALUES ('$full_name', '$email', '$phone')";
+
+    if ($conn->query($sql) === TRUE) {
+        // User added successfully
+        // Redirect to some page or display a success message
+        $success = "Signup successful";
+    } else {
+        // Failed to add user
+        $error = "Error: " . $conn->error;
+    }
+}
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Fetch and sanitize form data
+    $name = isset($_POST['name']) ? mysqli_real_escape_string($conn, $_POST['name']) : '';
+    $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, $_POST['email']) : '';
+    $phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, $_POST['phone']) : '';
+    $communication_type = isset($_POST['communication_type']) ? mysqli_real_escape_string($conn, $_POST['communication_type']) : '';
+    $communication_id = isset($_POST['communication_id']) ? mysqli_real_escape_string($conn, $_POST['communication_id']) : '';
+
+    // SQL to insert user data into the database
+    $sql = "INSERT INTO contact_users (name, email, phone, communication_type, communication_id) VALUES ('$name', '$email', '$phone', '$communication_type', '$communication_id')";
+
+    if ($conn->query($sql) === TRUE) {
+        // User added successfully
+        // Redirect to some page or display a success message
+        $success = "Data submitted successfully";
+    } else {
+        // Failed to add user
+        $error = "Error: " . $conn->error;
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -69,6 +123,46 @@ $result_offers = $conn->query($top_offers);
         <h1>Sign Up</h1>
         <br>
         <br>
+        <div class="sign-up-form" style="width: 60%; margin: auto;">
+            <form action="index.php" method="post">
+                <div class="form-control text-center">
+                    <img src="./admin/assets/css/img/logo.svg" alt="Uniclicks" width="100px">
+                    <h1>Welcome!</h1>
+                    <?php if (!empty($error)) { ?>
+                        <div class="message">
+                            <p id="errorMessage"><?php echo $error; ?></p>
+                        </div>
+                    <?php } else{ ?>
+                        <div class="message">
+                            <p id="successMessage"><?php echo $success; ?></p>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="form-control">
+                    <label for="full_name">Full Name</label>
+                    <br>
+                    <input type="text" name="full_name" id="full_name" placeholder="Enter Full Name" required>
+                </div>
+                <div class="form-control">
+                    <label for="email">Email</label>
+                    <br>
+                    <input type="email" name="email" id="email" placeholder="Enter Email" required>
+                </div>
+                <div class="form-control">
+                    <label for="phone">Phone</label>
+                    <br>
+                    <input type="text" name="phone" id="phone" placeholder="Enter Phone Number" required>
+                </div>
+                <div class="form-control">
+                    <label for="password">Password</label>
+                    <br>
+                    <input type="password" name="password" id="password" placeholder="Enter Password" required>
+                </div>
+                <div class="form-control">
+                    <button class="login-btn" type="submit">Signup</button>
+                </div>
+            </form>
+        </div>
         <br>
         <br>
         <h1>Spin Wheel</h1>
@@ -131,17 +225,213 @@ $result_offers = $conn->query($top_offers);
         <h1>Contacts</h1>
         <br>
         <br>
+        <div class="contact-form" style="width: 60%; margin: auto;">
+        <form action="index.php" method="post">
+            <div class="form-control text-center">
+                <img src="./admin/assets/css/img/logo.svg" alt="Uniclicks" width="100px">
+                <h1>Welcome!</h1>
+                <?php if (!empty($error)) { ?>
+                    <div class="message">
+                        <p id="errorMessage"><?php echo $error; ?></p>
+                    </div>
+                <?php } else{ ?>
+                    <div class="message">
+                        <p id="successMessage"><?php echo $success; ?></p>
+                    </div>
+                <?php } ?>
+            </div>
+            <div class="form-control">
+                <label for="cname">Name</label>
+                <br>
+                <input type="text" name="name" id="cname" placeholder="Enter Name" required>
+            </div>
+            <div class="form-control">
+                <label for="email">Email</label>
+                <br>
+                <input type="email" name="email" id="email" placeholder="Enter Email" required>
+            </div>
+            <div class="form-control">
+                <label for="phone">Phone</label>
+                <br>
+                <input type="text" name="phone" id="phone" placeholder="Enter Phone Number" required>
+            </div>
+            <div class="form-control">
+                <label>Communication Type</label>
+                <br>
+                <label><input type="radio" name="communication_type" value="Skype" required> Skype</label>
+                <label><input type="radio" name="communication_type" value="Telegram" > Telegram</label>
+                <label><input type="radio" name="communication_type" value="Email" > Email</label>
+            </div>
+            <div class="form-control">
+                <label for="communication_id">Communication ID</label>
+                <br>
+                <input type="text" name="communication_id" id="communication_id" placeholder="Enter Communication ID" required>
+            </div>
+            <div class="form-control">
+                <button class="login-btn" type="submit">Submit</button>
+            </div>
+        </form>
+        </div>
         <br>
         <br>
         <h1>Events</h1>
         <br>
         <br>
+        <style>
+            .carousel-container {
+            overflow: hidden;
+            width: 100%;
+            }
+
+            .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+            }
+
+            .carousel-item {
+                position: relative;
+                /* Other styles... */
+            }
+
+            .carousel-item img {
+                width: 100%;
+                display: block;
+                /* Ensure the image covers the container */
+                object-fit: cover;
+                height: 100%; /* Adjust the height as needed */
+            }
+
+            .event-details {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: end;
+                align-items: start;
+                padding: 40px;
+                background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+                color: white; /* White text color */
+            }
+
+            .event-details h3,
+            .event-details p {
+                margin: 0;
+                padding: 5px 0;
+            }
+            .event-details h3{
+                font-size: 50px;
+            }
+            .event-details p {
+                font-size: 20px;
+                margin: 0px 0px;
+            }
+            /* Add navigation buttons styles */
+        </style>
+        <h3>Past Events</h3>
+        <!-- Past Events Carousel -->
+        <div class="carousel-container">
+            <div id="past-events-carousel" class="carousel">
+                <?php while ($row = $past_events_result->fetch_assoc()) : ?>
+                    <!-- Display past events here -->
+                    <div class="carousel-item">
+                        <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" alt="Event Thumbnail">
+                        <div class="event-details">
+                            <h3><?php echo htmlspecialchars($row['title']); ?></h3>
+                            <p><?php echo htmlspecialchars($row['location']); ?></p>
+                            <?php
+                            // Convert start and end dates to DateTime objects for comparison
+                            $start_date = new DateTime($row['start_date']);
+                            $end_date = new DateTime($row['end_date']);
+
+                            // Check if start and end dates are on the same day
+                            if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
+                                // Display only start date
+                                echo "<p>" . $start_date->format('d, M Y') . "</p>";
+                            } else {
+                                // Check if start and end dates are in the same month
+                                if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
+                                    // Display start date day and end date day month and year
+                                    echo "<p>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</p>";
+                                } else {
+                                    // Display both start and end dates
+                                    echo "<p>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</p>";
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+        <br>
+        <h3>Upcoming Events</h3>
+        <!-- Upcoming Events Carousel -->
+        <div class="carousel-container">
+            <div id="upcoming-events-carousel" class="carousel">
+                <?php while ($row = $upcoming_events_result->fetch_assoc()) : ?>
+                    <!-- Display upcoming events here -->
+                    <div class="carousel-item">
+                        <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" alt="Event Thumbnail">
+                        <div class="event-details">
+                            <h3><?php echo htmlspecialchars($row['title']); ?></h3>
+                            <p><?php echo htmlspecialchars($row['location']); ?></p>
+                            <?php
+                            // Convert start and end dates to DateTime objects for comparison
+                            $start_date = new DateTime($row['start_date']);
+                            $end_date = new DateTime($row['end_date']);
+
+                            // Check if start and end dates are on the same day
+                            if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
+                                // Display only start date
+                                echo "<p>" . $start_date->format('d, M Y') . "</p>";
+                            } else {
+                                // Check if start and end dates are in the same month
+                                if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
+                                    // Display start date day and end date day month and year
+                                    echo "<p>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</p>";
+                                } else {
+                                    // Display both start and end dates
+                                    echo "<p>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</p>";
+                                }
+                            }
+                            ?>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
         <br>
         <br>
     </div>
     <!-- == Scripts == -->
     <script src="js/script.js" defer></script>
     <script src="assets/js/spin.js"></script>
+    <script>
+        let currentIndexPast = 0;
+let currentIndexUpcoming = 0;
+
+function moveCarousel(carouselId, index) {
+  const carousel = document.getElementById(carouselId);
+  const totalItems = carousel.children.length;
+  const itemWidth = carousel.children[0].offsetWidth;
+  const newTransformValue = index * -itemWidth;
+
+  if (index >= 0 && index < totalItems) {
+    carousel.style.transform = `translateX(${newTransformValue}px)`;
+    if (carouselId === 'past-events-carousel') {
+      currentIndexPast = index;
+    } else {
+      currentIndexUpcoming = index;
+    }
+  }
+}
+
+// Example usage: moveCarousel('past-events-carousel', 1);
+// Add event listeners to your navigation buttons to call moveCarousel function
+    </script>
 </body>
 
 </html>

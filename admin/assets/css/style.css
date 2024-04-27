@@ -686,7 +686,7 @@ td {
     line-height: normal;
 }
 
-.top-offer-table td button{
+.top-offer-table td button {
     background-color: #FF000011;
     padding: 5px;
     height: 40px;
@@ -741,6 +741,10 @@ td a:hover {
     color: #FF609A;
 }
 
+img.dash-events-thumb {
+    border-radius: 4px;
+}
+
 /* == TABLES == */
 /* == TAB content forms == */
 .add-offer {
@@ -765,7 +769,8 @@ td a:hover {
 }
 
 .exloretb-form,
-.prizestb-form {
+.prizestb-form,
+.eventstb-form {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -777,12 +782,39 @@ td a:hover {
 }
 
 .exloretb-form .inner,
+.eventstb-form .inner,
 .prizestb-form .inner {
     height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* Initially hide the delete button */
+.event-delete-btn {
+    visibility: hidden;
+    padding: 4px 20px;
+    background-color: #269D70;
+    color: #ffffff;
+    height: 40px;
+    border: 0px;
+    border-radius: 25px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
+}
+
+.event-delete-btn:hover {
+    transition: all ease-in 200ms;
+    visibility: hidden;
+    padding: 4px 20px;
+    background-color: #FF000033;
+    color: #FF0000;
+    border: 0px;
+    border-radius: 25px;
+    outline: none;
+    box-shadow: rgba(255, 0, 0, 0.1) 0px 8px 24px, rgba(255, 0, 0, 0.1) 0px 16px 56px, rgba(255, 0, 0, 0.1) 0px 24px 80px;
 }
 
 .form-container {

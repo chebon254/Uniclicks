@@ -120,4 +120,25 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+  // Add event listener to the button to display the form
+  document.getElementById("add-event-btn").addEventListener("click", function() {
+    // Get the form container
+    var formContainer = document.querySelector(".eventstb-form");
+    // Set its display property to "block"
+    formContainer.style.display = "block";
+  });
+
+  // Check if the cancel button exists before adding event listener
+  var cancelButton = document.getElementById("eventcancel-btn-form");
+  if (cancelButton) {
+    // Add event listener to the cancel button in the form
+    cancelButton.addEventListener("click", function() {
+      // Get the form container
+      var formContainer = document.querySelector(".eventstb-form");
+      // Set its display property back to "none" to hide it
+      formContainer.style.display = "none";
+    });
+  }
+});
 /* == || Dashboard == */
