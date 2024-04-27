@@ -1,3 +1,44 @@
+<?php
+
+include '../connect/database.php';
+session_start();
+
+$error = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get username and password from the form
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Prepare and execute the SQL query
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        // Verify password
+        if (password_verify($password, $row['password'])) {
+            // Password is correct, set session variables and redirect to dashboard
+            $_SESSION['username'] = $username;
+            header("location: ../dashboard");
+            exit;
+        } else {
+            // Password is incorrect, set error message
+            $error = "Wrong password!";
+        }
+    } else {
+        // User does not exist, set error message
+        $error = "User does not exist!";
+    }
+
+    $stmt->close();
+    mysqli_close($conn);
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,20 +65,20 @@
 
     <title>Uniclicks Login</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="css/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="css/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="css/favicon/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="css/favicon/favicon-16x16.png">
-    <link rel="manifest" href="css/favicon/site.webmanifest">
-    <link rel="mask-icon" href="css/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="css/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/css/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/css/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/css/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/css/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/css/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/css/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/css/favicon/favicon.ico">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="css/favicon/mstile-144x144.png">
-    <meta name="msapplication-config" content="css/favicon/browserconfig.xml">
+    <meta name="msapplication-TileImage" content="../assets/css/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="../assets/css/favicon/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
     <!-- == Style Sheet == -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <!-- == Fonts == -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,16 +94,18 @@
     <main class="login-pg">
         <div class="container login-pg-container">
             <div class="card one">
-                <img src="css/img/unclicks image.png" alt="Uniclicks">
+                <img src="../assets/css/img/unclicks image.png" alt="Uniclicks">
             </div>
             <div class="card two">
-                <form action="">
+                <form action="index.php" method="post">
                     <div class="form-control text-center">
-                        <img src="css/img/logo.svg" alt="Uniclicks" width="100px">
+                        <img src="../assets/css/img/logo.svg" alt="Uniclicks" width="100px">
                         <h1>Welcome!</h1>
-                        <div class="message">
-                            <p id="errorMessage">Wrong password!</p>
-                        </div>
+                        <?php if (!empty($error)) { ?>
+                            <div class="message">
+                                <p id="errorMessage"><?php echo $error; ?></p>
+                            </div>
+                        <?php } ?>
                     </div>
                     <div class="form-control">
                         <label for="username">Username</label>
@@ -83,14 +126,14 @@
                     </div>
                     <div class="form-control">
                         <button class="login-btn" type="submit">Login</button>
-                        <p class="back-link">Go back to website<a href="./index.html">Uniclicks</a></p>
+                        <p class="back-link">Go back to website<a href="../../">Uniclicks</a></p>
                     </div>
                 </form>
             </div>
         </div>
     </main>
     <!-- == Scripts == -->
-    <script src="js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
     <script>
         /* == Login Password input Eye == */
         const togglePassword = document.querySelector("#togglePassword");

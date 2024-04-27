@@ -1,3 +1,24 @@
+<?php
+// Start session
+session_start();
+
+// Database connection
+include '../connect/database.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    // Redirect to login page if not logged in
+    header("Location: ../login");
+    exit;
+}
+$success = "";
+// Fetch contact form data
+$top_offers = "SELECT `id`, `offer`, `monthly_clicks`, `monthly_payouts` FROM `top_offers`";
+$result_offers = $conn->query($top_offers);
+
+// Close database connection
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,20 +45,20 @@
 
     <title>Uniclicks Dashboard</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="css/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="css/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="css/favicon/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="css/favicon/favicon-16x16.png">
-    <link rel="manifest" href="css/favicon/site.webmanifest">
-    <link rel="mask-icon" href="css/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="css/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/css/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/css/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/css/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/css/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/css/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/css/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/css/favicon/favicon.ico">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="css/favicon/mstile-144x144.png">
-    <meta name="msapplication-config" content="css/favicon/browserconfig.xml">
+    <meta name="msapplication-TileImage" content="../assets/css/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="../assets/css/favicon/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
     <!-- == Style Sheet == -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <!-- == Fonts == -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,11 +72,52 @@
 </head>
 
 <body>
+    <div class="exloretb-form">
+        <div class="inner">
+            <div class="form-container">
+                <button class="cancel-btn-form" id="cancel-btn-form">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <form action="./add_offer.php" method="post">
+                    <div class="form-control text-center">
+                        <h1>Add an Offer</h1>
+                        <?php if (!empty($error)) { ?>
+                            <div class="message">
+                                <p id="errorMessage"><?php echo $error; ?></p>
+                            </div>
+                        <?php } else{ ?>
+                            <div class="message">
+                                <p id="successMessage"><?php echo $success; ?></p>
+                            </div>
+                        <?php } ?>
+                    </div>
+                    <div class="form-control">
+                        <label>Offer</label>
+                        <br>
+                        <input type="text" name="offer" placeholder="Enter offer">
+                    </div>
+                    <div class="form-control">
+                        <label>Monthly-clicks</label>
+                        <br>
+                        <input type="text" name="monthly_clicks" id="monthly-clicks" placeholder="Enter monthly-clicks" required>
+                    </div>
+                    <div class="form-control">
+                        <label>Monthly-payouts</label>
+                        <br>
+                        <input type="text" name="monthly_payouts" placeholder="Enter monthly-payouts">
+                    </div>
+                    <div class="form-control">
+                        <button class="login-btn" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <main class="dashboard-pg">
         <div class="side-navigation">
             <div class="side-logo">
-                <img class="icon" src="css/favicon/apple-touch-icon-76x76-precomposed.png" alt="Uniclicks">
-                <img class="logo" src="css/img/logo.svg" alt="Uniclicks">
+                <img class="icon" src="../assets/css/favicon/apple-touch-icon-76x76-precomposed.png" alt="Uniclicks">
+                <img class="logo" src="../assets/css/img/logo.svg" alt="Uniclicks">
             </div>
             <div class="side-menu">
                 <br>
@@ -64,7 +126,7 @@
                 <button class="dash-menu-btn tab-btn active" onclick="openTab(event, 'dashboardtb')">
                     <div class="contents">
                         <div class="btn-icon">
-                            <i class="fa-solid fa-gauge-high"></i>
+                            <i class="fa-solid fa-qrcode"></i>
                         </div>
                         <div class="btn-text">
                             Dashboard
@@ -74,7 +136,7 @@
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'exploretb')">
                     <div class="contents">
                         <div class="btn-icon">
-                            <i class="fa-solid fa-compass"></i>
+                            <i class="fa-regular fa-compass"></i>
                         </div>
                         <div class="btn-text">
                             Explore
@@ -84,7 +146,7 @@
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'accountstb')">
                     <div class="contents">
                         <div class="btn-icon">
-                            <i class="fa-solid fa-user-lock"></i>
+                            <i class="fa-regular fa-circle-user"></i>
                         </div>
                         <div class="btn-text">
                             Accounts
@@ -94,10 +156,20 @@
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'contactstb')">
                     <div class="contents">
                         <div class="btn-icon">
-                            <i class="fa-solid fa-id-card-clip"></i>
+                            <i class="fa-regular fa-address-card"></i>
                         </div>
                         <div class="btn-text">
                             Contacts
+                        </div>
+                    </div>
+                </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'eventstb')">
+                    <div class="contents">
+                        <div class="btn-icon">
+                        <i class="fa-regular fa-calendar-check"></i>
+                        </div>
+                        <div class="btn-text">
+                            Events
                         </div>
                     </div>
                 </button>
@@ -138,7 +210,7 @@
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'billingtb')">
                     <div class="contents">
                         <div class="btn-icon">
-                            <i class="fa-solid fa-credit-card"></i>
+                            <i class="fa-regular fa-credit-card"></i>
                         </div>
                         <div class="btn-text">
                             Billing
@@ -147,7 +219,7 @@
                 </button>
                 <br>
                 <br>
-                <button class="side-btn-logout">
+                <button class="side-btn-logout" onclick="location.href='logout.php'">
                     <i class="fa-solid fa-circle-arrow-left"></i> Logout
                 </button>
                 <br>
@@ -194,11 +266,11 @@
 
                     <div class="nav-item">
                         <a href="#" class="profile-icon">
-                            <img src="css/img/profile.png" alt="Profile Picture">
+                            <img src="../assets/css/img/profile.png" alt="Profile Picture">
                         </a>
                         <div class="dropdown-menu profile-dropdown">
-                            <a href="#">Settings</a>
-                            <a href="#">Logout</a>
+                            <a href="./settings">Settings</a>
+                            <a href="logout.php">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -259,110 +331,39 @@
                     </div>
                 </div>
                 <div id="exploretb" class="explore-tab dash-tab-content">
-                    <div class="exloretb-form">
-                        <div class="inner">
-                            <div class="form-container">
-                                <button class="cancel-btn-form" id="cancel-btn-form">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                                <form action="">
-                                    <div class="form-control text-center">
-                                        <h1>Add an Offer</h1>
-                                        <div class="message">
-                                            <p id="errorMessage">Error</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-control">
-                                        <label>Offer</label>
-                                        <br>
-                                        <input type="text" name="offer-name" placeholder="Enter offer">
-                                    </div>
-                                    <div class="form-control">
-                                        <label>Monthly-clicks</label>
-                                        <br>
-                                        <input type="text" name="monthly-clicks-name" id="monthly-clicks" placeholder="Enter monthly-clicks" required>
-                                    </div>
-                                    <div class="form-control">
-                                        <label>Monthly-payouts</label>
-                                        <br>
-                                        <input type="text" name="monthly-payouts-name" placeholder="Enter monthly-payouts">
-                                    </div>
-                                    <div class="form-control">
-                                        <button class="login-btn" type="submit">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <h2>Top Offers</h2>
                     <div class="add-offer">
-                        <span>Add a new Offer</span>
-                        <button id="add-offers-btn"><i class="fa-solid fa-plus"></i></button>
+                        <h2>Top Offers</h2>
+                        <button id="add-offers-btn"><i class="fa-solid fa-plus"></i> Add New Offer</button>
                     </div>
-                    <table>
+                    <table class="top-offer-table">
                         <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Offer</th>
                                 <th>Monthly clicks</th>
                                 <th>Monthly Payouts</th>
-                                <th>Remove</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Financial Lead Gen US</td>
-                                <td>3,150</td>
-                                <td>$21,440</td>
-                                <td>
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Casino DACH</td>
-                                <td>2,320</td>
-                                <td>$29,400</td>
-                                <td>
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Casino CA</td>
-                                <td>380</td>
-                                <td>$19,800</td>
-                                <td>
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Sweepstakes US</td>
-                                <td>11,235</td>
-                                <td>$25,750</td>
-                                <td>
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Nutra US</td>
-                                <td>3,990</td>
-                                <td>$12,300</td>
-                                <td>
-                                    <i class="fa-regular fa-trash-can"></i>
-                                </td>
-                            </tr>
+                            <?php 
+                            $rowNumber = 1; // Initialize row number
+                            while ($row = $result_offers->fetch_assoc()) : ?>
+                                <tr>
+                                    <td><?php echo $rowNumber++; ?></td> <!-- Increment and display row number -->
+                                    <td><?php echo $row['offer']; ?></td>
+                                    <td><?php echo number_format($row['monthly_clicks']); ?></td>
+                                    <td>$<?php echo number_format($row['monthly_payouts']); ?></td>
+                                    <td><button class="offer-delete-btn" data-id="<?php echo $row['id']; ?>"><i class="fa-solid fa-xmark"></i></button></td>
+                                </tr>
+                            <?php endwhile; ?>
                         </tbody>
                     </table>
                 </div>
                 <div id="accountstb" class="accounts-tab dash-tab-content">
-                    <h2>User Accounts</h2>
                     <div class="add-offer">
-                        <span>Add a new account</span>
-                        <button><i class="fa-solid fa-plus"></i></button>
+                        <h2>User Accounts</h2>
+                        <button id=""><i class="fa-solid fa-plus"></i> Add a new user</button>
                     </div>
                     <table>
                         <thead>
@@ -537,6 +538,118 @@
                       </table>
                       
                 </div>
+                <div id="eventstb" class="events-tab dash-tab-content">
+                    <div class="add-offer">
+                        <h2>Events</h2>
+                        <button id=""><i class="fa-solid fa-plus"></i> Add a new event</button>
+                    </div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Company</th>
+                            <th>Communication</th>
+                            <th>ID</th>
+                            <th>Message</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>johndoe@example.com</td>
+                            <td>ABC Company</td>
+                            <td>WhatsApp</td>
+                            <td>1234567890</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>janesmith@example.com</td>
+                            <td>XYZ Corporation</td>
+                            <td>Telegram</td>
+                            <td>@janesmith</td>
+                            <td>Consectetur adipiscing elit</td>
+                          </tr>
+                          <tr>
+                            <td>3</td>
+                            <td>Michael Johnson</td>
+                            <td>michael@example.com</td>
+                            <td>123 Industries</td>
+                            <td>Email</td>
+                            <td>michael@example.com</td>
+                            <td>Sed do eiusmod tempor incididunt</td>
+                          </tr>
+                          <tr>
+                            <td>4</td>
+                            <td>Sarah Brown</td>
+                            <td>sarah@example.com</td>
+                            <td>Smith & Co.</td>
+                            <td>Skype</td>
+                            <td>sarah_brown</td>
+                            <td>Ut labore et dolore magna aliqua</td>
+                          </tr>
+                          <tr>
+                            <td>5</td>
+                            <td>David Lee</td>
+                            <td>david@example.com</td>
+                            <td>Lee Enterprises</td>
+                            <td>WhatsApp</td>
+                            <td>0987654321</td>
+                            <td>Ut enim ad minim veniam</td>
+                          </tr>
+                          <tr>
+                            <td>6</td>
+                            <td>Emily Wilson</td>
+                            <td>emily@example.com</td>
+                            <td>Wilson Group</td>
+                            <td>Email</td>
+                            <td>emily@example.com</td>
+                            <td>Quis nostrud exercitation ullamco</td>
+                          </tr>
+                          <tr>
+                            <td>7</td>
+                            <td>James Taylor</td>
+                            <td>james@example.com</td>
+                            <td>Taylor Corporation</td>
+                            <td>Telegram</td>
+                            <td>@jamestaylor</td>
+                            <td>Laboris nisi ut aliquip ex ea commodo</td>
+                          </tr>
+                          <tr>
+                            <td>8</td>
+                            <td>Emma Clark</td>
+                            <td>emma@example.com</td>
+                            <td>Clark Industries</td>
+                            <td>Skype</td>
+                            <td>emma_clark</td>
+                            <td>Duis aute irure dolor in reprehenderit</td>
+                          </tr>
+                          <tr>
+                            <td>9</td>
+                            <td>Daniel Brown</td>
+                            <td>daniel@example.com</td>
+                            <td>Brown Enterprises</td>
+                            <td>Email</td>
+                            <td>daniel@example.com</td>
+                            <td>Excepteur sint occaecat cupidatat non proident</td>
+                          </tr>
+                          <tr>
+                            <td>10</td>
+                            <td>Lisa Miller</td>
+                            <td>lisa@example.com</td>
+                            <td>Miller Group</td>
+                            <td>WhatsApp</td>
+                            <td>5678901234</td>
+                            <td>Sunt in culpa qui officia deserunt</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
+                </div>
                 <div id="prizestb" class="prizes-tab dash-tab-content">
                     <div class="prizestb-form">
                         <div class="inner">
@@ -573,10 +686,9 @@
                             </div>
                         </div>
                     </div>
-                    <h2>Prizes won!</h2>
                     <div class="add-offer">
-                        <span>Add a new Offer</span>
-                        <button id="prizestb-add-prize-btn"><i class="fa-solid fa-plus"></i></button>
+                        <h2>Prizes</h2>
+                        <button id="prizestb-add-prize-btn"><i class="fa-solid fa-plus"></i> Add a new prize</button>
                     </div>
                     <table>
                         <thead>
@@ -647,7 +759,27 @@
         </div>
     </main>
     <!-- == Scripts == -->
-    <script src="js/script.js" defer></script>
+    <script src="../assets/js/script.js" defer></script>
+    <script>
+        document.querySelectorAll('.offer-delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const offerId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this offer?')) {
+                    fetch('./delete_offer.php?id=' + offerId, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                // Refresh the page or update the table as needed
+                                location.reload(); // For example, refresh the page
+                            } else {
+                                console.error('Failed to delete offer');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

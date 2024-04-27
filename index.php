@@ -1,3 +1,11 @@
+<?php
+include './admin/connect/database.php';
+
+// Fetch contact form data
+$top_offers = "SELECT `id`, `offer`, `monthly_clicks`, `monthly_payouts` FROM `top_offers`";
+$result_offers = $conn->query($top_offers);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,20 +32,20 @@
 
     <title>Uniclicks</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="admin/css/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="admin/css/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="admin/css/favicon/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="admin/css/favicon/favicon-16x16.png">
-    <link rel="manifest" href="admin/css/favicon/site.webmanifest">
-    <link rel="mask-icon" href="admin/css/favicon/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="admin/css/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="admin/assets/css/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="admin/assets/css/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="admin/assets/css/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="admin/assets/css/favicon/favicon-16x16.png">
+    <link rel="manifest" href="admin/assets/css/favicon/site.webmanifest">
+    <link rel="mask-icon" href="admin/assets/css/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="admin/assets/css/favicon/favicon.ico">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="css/favicon/mstile-144x144.png">
-    <meta name="msapplication-config" content="css/favicon/browserconfig.xml">
+    <meta name="msapplication-TileImage" content="admin/assets/css/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="admin/assets/css/favicon/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
     <!-- == Style Sheet == -->
-    <link rel="stylesheet" href="admin/css/style.css">
+    <link rel="stylesheet" href="admin/assets/css/style.css">
 
     <!-- == Fonts == -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +56,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         crossorigin="anonymous" />
 
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
 
@@ -85,6 +93,39 @@
         <h1>Offers</h1>
         <br>
         <br>
+        <table class="top-offer-table">
+                        <thead style="color: #ffffff !important; background-color: #269D70 !important;">
+                            <tr>
+                                <style>
+                                    table{
+                                        width: 60%;
+                                        overflow: hidden;
+                                        border-top-left-radius: 20px;
+                                        border-top-right-radius: 20px;
+                                    }
+                                    th{
+                                        color: #ffffff !important;
+                                    }
+                                </style>
+                                <th></th>
+                                <th>Offer</th>
+                                <th>Monthly clicks</th>
+                                <th>Monthly Payouts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $rowNumber = 1; // Initialize row number
+                            while ($row = $result_offers->fetch_assoc()) : ?>
+                                <tr>
+                                    <td></td>
+                                    <td><?php echo $row['offer']; ?></td>
+                                    <td><?php echo number_format($row['monthly_clicks']); ?></td>
+                                    <td>$<?php echo number_format($row['monthly_payouts']); ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
         <br>
         <br>
         <h1>Contacts</h1>
@@ -100,7 +141,7 @@
     </div>
     <!-- == Scripts == -->
     <script src="js/script.js" defer></script>
-    <script src="spin.js"></script>
+    <script src="assets/js/spin.js"></script>
 </body>
 
 </html>
