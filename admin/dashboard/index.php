@@ -24,6 +24,10 @@ $result_event = $conn->query($events_list);
 $sql = "SELECT `id`, `full_name`, `email`, `phone`, `prize_id`, `counter` FROM `signup_users` WHERE 1";
 $result_signup_users = $conn->query($sql);
 
+// Perform database query to fetch data
+$sql = "SELECT `spin_prizesID`, `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes` WHERE 1";
+$result_spin_prizes = $conn->query($sql);
+
 
 // Close database connection
 $conn->close();
@@ -164,6 +168,57 @@ $conn->close();
                     <div class="form-control">
                         <label>Thumbnail Image</label>
                         <input type="file" name="thumbnail" required>
+                    </div>
+                    <div class="form-control">
+                        <button class="login-btn" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="prizestb-form">
+        <div class="inner">
+            <div class="form-container">
+                <button class="cancel-btn-form" id="prizestbcancel-btn-form">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <form action="add_spin_prize.php" method="post">
+                    <div class="form-control text-center">
+                        <h1>Add a prize</h1>
+                        <div class="message">
+                            <p id="errorMessage">Error</p>
+                        </div>
+                    </div>
+                    <div class="form-control">
+                        <label>Name</label>
+                        <br>
+                        <input type="text" name="prize" placeholder="Enter name" required>
+                    </div>
+                    <div class="form-control">
+                        <label>Probability</label>
+                        <br>
+                        <select name="probability" required>
+                            <option value="">Select probability</option>
+                            <option value="70">70%</option>
+                            <option value="20">20%</option>
+                            <option value="10">10%</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label>Background Color</label>
+                        <br>
+                        <select name="backgroundColor" required>
+                            <option value="#ffffff">White</option>
+                            <option value="#269D70">Green</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label>Text Color</label>
+                        <br>
+                        <select name="textColor" required>
+                            <option value="#ffffff">White</option>
+                            <option value="#269D70">Green</option>
+                        </select>
                     </div>
                     <div class="form-control">
                         <button class="login-btn" type="submit">Submit</button>
@@ -613,41 +668,6 @@ $conn->close();
                       
                 </div>
                 <div id="prizestb" class="prizes-tab dash-tab-content">
-                    <div class="prizestb-form">
-                        <div class="inner">
-                            <div class="form-container">
-                                <button class="cancel-btn-form" id="prizestbcancel-btn-form">
-                                    <i class="fa-solid fa-xmark"></i>
-                                </button>
-                                <form action="">
-                                    <div class="form-control text-center">
-                                        <h1>Add a prize</h1>
-                                        <div class="message">
-                                            <p id="errorMessage">Error</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-control">
-                                        <label>Name</label>
-                                        <br>
-                                        <input type="text" name="prize" placeholder="Enter name">
-                                    </div>
-                                    <div class="form-control">
-                                        <label>Price</label>
-                                        <br>
-                                        <input type="text" name="price" placeholder="Enter price">
-                                    </div>
-                                    <div class="form-control">
-                                        <label>Probability out of 5</label>
-                                        <br>
-                                        <input type="number" name="price" placeholder="Enter probability">
-                                    </div>
-                                    <div class="form-control">
-                                        <button class="login-btn" type="submit">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                     <div class="add-offer">
                         <h2>Prizes</h2>
                         <button id="prizestb-add-prize-btn"><i class="fa-solid fa-plus"></i> Add a new prize</button>
@@ -657,53 +677,25 @@ $conn->close();
                           <tr>
                             <th>No</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Prize Won</th>
+                            <th>Probability</th>
+                            <th>Back color</th>
+                            <th>Text color</th>
+                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>johndoe@example.com</td>
-                            <td>Gold</td>
-                          </tr>
-                          <tr>
-                            <td>2</td>
-                            <td>Jane Smith</td>
-                            <td>janesmith@example.com</td>
-                            <td>Slider</td>
-                          </tr>
-                          <tr>
-                            <td>3</td>
-                            <td>Michael Johnson</td>
-                            <td>michael@example.com</td>
-                            <td>Gold</td>
-                          </tr>
-                          <tr>
-                            <td>4</td>
-                            <td>Sarah Brown</td>
-                            <td>sarah@example.com</td>
-                            <td>Diamond</td>
-                          </tr>
-                          <tr>
-                            <td>5</td>
-                            <td>David Lee</td>
-                            <td>david@example.com</td>
-                            <td>Slider</td>
-                          </tr>
-                          <tr>
-                            <td>6</td>
-                            <td>Emily Wilson</td>
-                            <td>emily@example.com</td>
-                            <td>Gold</td>
-                          </tr>
-                          <tr>
-                            <td>7</td>
-                            <td>Lisa Miller</td>
-                            <td>lisa@example.com</td>
-                            <td>Diamond</td>
-                          </tr>
+                             <?php
+                             $rowNumber = 1; // Initialize row number
+                             while ($row = $result_spin_prizes->fetch_assoc()) : ?>
+                                 <tr class="prize-delete-button-container">
+                                     <td><?php echo $rowNumber++; ?></td> <!-- Increment and display row number -->
+                                     <td><?php echo $row['spin_prizesTitle']; ?></td>
+                                     <td><?php echo $row['Probability']; ?>%</td>
+                                     <td><?php echo $row['BackgroundColor']; ?></td>
+                                     <td><?php echo $row['TextColor']; ?></td>
+                                     <td><button class="prize-delete-btn" data-id="<?php echo $row['spin_prizesID']; ?>"><i class="fa-solid fa-xmark"></i></button></td>
+                                 </tr>
+                             <?php endwhile; ?>
                         </tbody>
                       </table>
                       
@@ -780,6 +772,50 @@ $conn->close();
 
             // Add event listener to delete button
             container.querySelector('.event-delete-btn').addEventListener('click', () => {
+                const eventId = container.getAttribute('data-id');
+                // Perform deletion logic here (will be added in the next response)
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.prize-delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const offerId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this offer?')) {
+                    fetch('./prize_delete.php?id=' + offerId, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                // Refresh the page or update the table as needed
+                                location.reload(); // For example, refresh the page
+                            } else {
+                                console.error('Failed to delete offer');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    </script>
+    <script>
+        // Get all delete button containers
+        const deleteButtonContainers = document.querySelectorAll('.prize-delete-button-container');
+
+        // Add event listener to each delete button container
+        deleteButtonContainers.forEach(container => {
+            container.addEventListener('mouseenter', () => {
+                // Show the delete button when mouse enters the container
+                const deleteButton = container.querySelector('.prize-delete-btn');
+                deleteButton.style.visibility = 'visible';
+            });
+
+            container.addEventListener('mouseleave', () => {
+                // Hide the delete button when mouse leaves the container
+                const deleteButton = container.querySelector('.prize-delete-btn');
+                deleteButton.style.visibility = 'hidden';
+            });
+
+            // Add event listener to delete button
+            container.querySelector('.prize-delete-btn').addEventListener('click', () => {
                 const eventId = container.getAttribute('data-id');
                 // Perform deletion logic here (will be added in the next response)
             });

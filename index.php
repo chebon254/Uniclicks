@@ -59,7 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -168,20 +167,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Spin Wheel</h1>
         <br>
         <br>
+        <?php
+$sql = "SELECT * FROM spin_prizes";
+$result = $conn->query($sql);
+$prizes = array();
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $prize = array();
+        foreach ($row as $key => $value) {
+            $prize[$key] = $value;
+        }
+        $prizes[] = $prize;
+    }
+}
+?>
         <div class="spin-wheel">
             <button id="spin">Spin</button>
             <span class="spin-wheel-arrow"></span>
             <div class="spin-wheel-container">
-                <div class="spin-wheel-one">1</div>
-                <div class="spin-wheel-two">2</div>
-                <div class="spin-wheel-three">3</div>
-                <div class="spin-wheel-four">4</div>
-                <div class="spin-wheel-five">5</div>
-                <div class="spin-wheel-six">6</div>
-                <div class="spin-wheel-seven">7</div>
-                <div class="spin-wheel-eight">8</div>
+                <?php
+                $count = count($prizes);
+                $degree = 360 / $count;
+                $offset = 0;
+                foreach ($prizes as $key => $prize) {
+                    $prizeId = isset($prize['id']) ? $prize['id'] : '';
+                    $prizeName = isset($prize['name']) ? $prize['name'] : '';
+                    echo '<div class="spin-wheel-item" data-prize="' . $prizeId . '" style="transform: rotate(' . $offset . 'deg);">' . $prizeName . '</div>';
+                    $offset += $degree;
+                }
+                ?>
             </div>
         </div>
+<script>
+    // Fetch prize data from the server
+fetch('get_prizes.php')
+  .then(response => response.json())
+  .then(prizes => {
+    // Dynamically generate HTML for spin wheel based on prize data
+    const container = document.querySelector(".spin-wheel-container");
+    container.innerHTML = '';
+    prizes.forEach((prize, index) => {
+      const angle = index * (360 / prizes.length);
+      const div = document.createElement('div');
+      div.textContent = prize.spin_prizesTitle;
+      div.style.transform = `rotate(${angle}deg)`;
+      div.style.backgroundColor = prize.BackgroundColor;
+      div.style.color = prize.TextColor;
+      div.classList.add(`spin-wheel-${index + 1}`);
+      container.appendChild(div);
+    });
+  });
+
+</script>
         <br>
         <br>
         <h1>Offers</h1>
