@@ -798,25 +798,25 @@ $conn->close();
     </script>
     <script>
         // Get all delete button containers
-        const deleteButtonContainers = document.querySelectorAll('.prize-delete-button-container');
+        const prizedeleteButtonContainers = document.querySelectorAll('.prize-delete-button-container');
 
         // Add event listener to each delete button container
-        deleteButtonContainers.forEach(container => {
+        prizedeleteButtonContainers.forEach(container => {
             container.addEventListener('mouseenter', () => {
                 // Show the delete button when mouse enters the container
-                const deleteButton = container.querySelector('.prize-delete-btn');
-                deleteButton.style.visibility = 'visible';
+                const prizedeleteButton = container.querySelector('.prize-delete-btn');
+                prizedeleteButton.style.visibility = 'visible';
             });
 
             container.addEventListener('mouseleave', () => {
                 // Hide the delete button when mouse leaves the container
-                const deleteButton = container.querySelector('.prize-delete-btn');
-                deleteButton.style.visibility = 'hidden';
+                const prizedeleteButton = container.querySelector('.prize-delete-btn');
+                prizedeleteButton.style.visibility = 'hidden';
             });
 
             // Add event listener to delete button
             container.querySelector('.prize-delete-btn').addEventListener('click', () => {
-                const eventId = container.getAttribute('data-id');
+                const prizeId = container.getAttribute('data-id');
                 // Perform deletion logic here (will be added in the next response)
             });
         });

@@ -156,7 +156,9 @@ main.login-pg {
     color: var(--ink);
 }
 
-.form-control input , select , option {
+.form-control input,
+select,
+option {
     height: 50px;
     width: 100%;
     outline: none;
@@ -792,7 +794,8 @@ img.dash-events-thumb {
 }
 
 /* Initially hide the delete button */
-.event-delete-btn, .prize-delete-btn {
+.event-delete-btn,
+.prize-delete-btn {
     visibility: hidden;
     padding: 4px 20px;
     background-color: #269D70;
@@ -801,11 +804,12 @@ img.dash-events-thumb {
     border: 0px;
     border-radius: 25px;
     outline: none;
-    cursor: pointer;
+    cursor: pointer !important;
     box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
 }
 
-.event-delete-btn:hover, .prize-delete-btn:hover {
+.event-delete-btn:hover,
+.prize-delete-btn:hover {
     transition: all ease-in 200ms;
     visibility: hidden;
     padding: 4px 20px;
