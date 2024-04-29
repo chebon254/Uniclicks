@@ -168,19 +168,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br>
         <br>
         <?php
-$sql = "SELECT * FROM spin_prizes";
-$result = $conn->query($sql);
-$prizes = array();
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $prize = array();
-        foreach ($row as $key => $value) {
-            $prize[$key] = $value;
+        $sql = "SELECT * FROM spin_prizes";
+        $result = $conn->query($sql);
+        $prizes = array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $prize = array();
+                foreach ($row as $key => $value) {
+                    $prize[$key] = $value;
+                }
+                $prizes[] = $prize;
+            }
         }
-        $prizes[] = $prize;
-    }
-}
-?>
+        ?>
         <div class="spin-wheel">
             <button id="spin">Spin</button>
             <span class="spin-wheel-arrow"></span>
@@ -198,65 +198,65 @@ if ($result->num_rows > 0) {
                 ?>
             </div>
         </div>
-<script>
-    // Fetch prize data from the server
-fetch('get_prizes.php')
-  .then(response => response.json())
-  .then(prizes => {
-    // Dynamically generate HTML for spin wheel based on prize data
-    const container = document.querySelector(".spin-wheel-container");
-    container.innerHTML = '';
-    prizes.forEach((prize, index) => {
-      const angle = index * (360 / prizes.length);
-      const div = document.createElement('div');
-      div.textContent = prize.spin_prizesTitle;
-      div.style.transform = `rotate(${angle}deg)`;
-      div.style.backgroundColor = prize.BackgroundColor;
-      div.style.color = prize.TextColor;
-      div.classList.add(`spin-wheel-${index + 1}`);
-      container.appendChild(div);
-    });
-  });
+        <script>
+            // Fetch prize data from the server
+        fetch('get_prizes.php')
+        .then(response => response.json())
+        .then(prizes => {
+            // Dynamically generate HTML for spin wheel based on prize data
+            const container = document.querySelector(".spin-wheel-container");
+            container.innerHTML = '';
+            prizes.forEach((prize, index) => {
+            const angle = index * (360 / prizes.length);
+            const div = document.createElement('div');
+            div.textContent = prize.spin_prizesTitle;
+            div.style.transform = `rotate(${angle}deg)`;
+            div.style.backgroundColor = prize.BackgroundColor;
+            div.style.color = prize.TextColor;
+            div.classList.add(`spin-wheel-${index + 1}`);
+            container.appendChild(div);
+            });
+        });
 
-</script>
+        </script>
         <br>
         <br>
         <h1>Offers</h1>
         <br>
         <br>
         <table class="top-offer-table">
-                        <thead style="color: #ffffff !important; background-color: #269D70 !important;">
-                            <tr>
-                                <style>
-                                    table{
-                                        width: 60%;
-                                        overflow: hidden;
-                                        border-top-left-radius: 20px;
-                                        border-top-right-radius: 20px;
-                                    }
-                                    th{
-                                        color: #ffffff !important;
-                                    }
-                                </style>
-                                <th></th>
-                                <th>Offer</th>
-                                <th>Monthly clicks</th>
-                                <th>Monthly Payouts</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $rowNumber = 1; // Initialize row number
-                            while ($row = $result_offers->fetch_assoc()) : ?>
-                                <tr>
-                                    <td></td>
-                                    <td><?php echo $row['offer']; ?></td>
-                                    <td><?php echo number_format($row['monthly_clicks']); ?></td>
-                                    <td>$<?php echo number_format($row['monthly_payouts']); ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
+            <thead style="color: #ffffff !important; background-color: #269D70 !important;">
+                <tr>
+                    <style>
+                        table{
+                            width: 60%;
+                            overflow: hidden;
+                            border-top-left-radius: 20px;
+                            border-top-right-radius: 20px;
+                        }
+                        th{
+                            color: #ffffff !important;
+                        }
+                    </style>
+                    <th></th>
+                    <th>Offer</th>
+                    <th>Monthly clicks</th>
+                    <th>Monthly Payouts</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $rowNumber = 1; // Initialize row number
+                while ($row = $result_offers->fetch_assoc()) : ?>
+                    <tr>
+                        <td></td>
+                        <td><?php echo $row['offer']; ?></td>
+                        <td><?php echo number_format($row['monthly_clicks']); ?></td>
+                        <td>$<?php echo number_format($row['monthly_payouts']); ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
         <br>
         <br>
         <h1>Contacts</h1>
@@ -448,26 +448,26 @@ fetch('get_prizes.php')
     <script src="assets/js/spin.js"></script>
     <script>
         let currentIndexPast = 0;
-let currentIndexUpcoming = 0;
+        let currentIndexUpcoming = 0;
 
-function moveCarousel(carouselId, index) {
-  const carousel = document.getElementById(carouselId);
-  const totalItems = carousel.children.length;
-  const itemWidth = carousel.children[0].offsetWidth;
-  const newTransformValue = index * -itemWidth;
+        function moveCarousel(carouselId, index) {
+        const carousel = document.getElementById(carouselId);
+        const totalItems = carousel.children.length;
+        const itemWidth = carousel.children[0].offsetWidth;
+        const newTransformValue = index * -itemWidth;
 
-  if (index >= 0 && index < totalItems) {
-    carousel.style.transform = `translateX(${newTransformValue}px)`;
-    if (carouselId === 'past-events-carousel') {
-      currentIndexPast = index;
-    } else {
-      currentIndexUpcoming = index;
-    }
-  }
-}
+        if (index >= 0 && index < totalItems) {
+            carousel.style.transform = `translateX(${newTransformValue}px)`;
+            if (carouselId === 'past-events-carousel') {
+            currentIndexPast = index;
+            } else {
+            currentIndexUpcoming = index;
+            }
+        }
+        }
 
-// Example usage: moveCarousel('past-events-carousel', 1);
-// Add event listeners to your navigation buttons to call moveCarousel function
+        // Example usage: moveCarousel('past-events-carousel', 1);
+        // Add event listeners to your navigation buttons to call moveCarousel function
     </script>
 </body>
 
