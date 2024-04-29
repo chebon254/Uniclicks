@@ -85,9 +85,6 @@ $conn->close();
           <div class="col-xs-6" align="center">
             <button type="button" class="btn btn-success" onclick="spin()">Spin Now!</button>
           </div>
-          <div class="col-xs-6" align="center">
-            <button type="button" id="stop" class="btn btn-info" onclick="stops()">Stop Now!</button>
-          </div> 
   </div> 
 </div><!-- end container -->
 <br>
@@ -127,7 +124,7 @@ function create_spinner() {
 create_spinner();
 
 var deg = rand(0, 360);
-var speed = 5;
+var speed = 0;
 var ctx = canvas.getContext('2d');
 var width = canvas.width; // size
 var center = width / 2;      // center
@@ -140,19 +137,19 @@ function spin() {
     var sliceDeg = 360 / slices;
     deg += speed;
     deg %= 360;
-    // Increment speed
-    if (!isStopped && speed < 5) {
-        speed = speed + 1 * 0.1;
+    // Instant fast speed
+    if (!isStopped && speed < 30) {
+        speed = speed + 2;
     }
-    // Decrement Speed
+    // Stopped!
     if (isStopped) {
         if (!lock) {
             lock = true;
-            slowDownRand = rand(0.994, 0.998);
+            slowDownRand = rand(0.986, 0.990);
         }
         speed = speed > 0.2 ? speed *= slowDownRand : 0;
     }
-    // Stopped!
+    // Stopped after 6 seconds
     if (lock && !speed) {
         var ai = Math.floor(((360 - deg - 90) % 360) / sliceDeg); // deg 2 Array Index
         ai = (slices + ai) % slices; // Fix negative index
@@ -213,13 +210,7 @@ function spin() {
                 type: "warning",
                 confirmButtonText: "OK",
                 closeOnConfirm: true
-            }).then(function() {
-                // Reset the spin wheel and allow the user to spin again
-                isStopped = false;
-                lock = false;
-                speed = 5;
-                create_spinner();
-            });
+            })
         }
     }
     ctx.clearRect(0, 0, width, width);
@@ -245,9 +236,9 @@ function spin() {
     window.requestAnimationFrame(spin);  
 }
 
-function stops(){
+setTimeout(function() {
     isStopped = true;
-}
+}, 6000);
 
 function deg2rad(deg) {
     return deg * Math.PI/180;
@@ -257,5 +248,6 @@ function rand(min, max) {
     return Math.random() * (max - min) + min;
 }
 </script>
+
 </body>
 </html>
