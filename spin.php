@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch spin wheel data from the database
-$sql = "SELECT spin_prizesTitle, BackgroundColor, TextColor FROM spin_prizes";
+$sql = "SELECT `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes`";
 $result = $conn->query($sql);
 
 // Store the fetched data in an array
@@ -91,7 +91,6 @@ $conn->close();
   </div> 
 </div><!-- end container -->
 <br>
-<center>Developed by <a href="https://shinerweb.com/">Shinerweb</a></center>
 
 <script language="JavaScript">
 var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
@@ -128,7 +127,7 @@ function create_spinner() {
 create_spinner();
 
 var deg = rand(0, 360);
-var speed = 10;
+var speed = 5;
 var ctx = canvas.getContext('2d');
 var width = canvas.width; // size
 var center = width / 2;      // center
@@ -142,7 +141,7 @@ function spin() {
     deg += speed;
     deg %= 360;
     // Increment speed
-    if (!isStopped && speed < 3) {
+    if (!isStopped && speed < 5) {
         speed = speed + 1 * 0.1;
     }
     // Decrement Speed
@@ -157,30 +156,71 @@ function spin() {
     if (lock && !speed) {
         var ai = Math.floor(((360 - deg - 90) % 360) / sliceDeg); // deg 2 Array Index
         ai = (slices + ai) % slices; // Fix negative index
-      
-        // Show popup for win or lose
-        swal({
-            title: "Congratulations!",
-            text : "You won " + spinWheelData[ai]['spin_prizesTitle'],
-            type: "success",
-            confirmButtonText: "OK",
-            closeOnConfirm: true
-        }).then(function() {
-            // Handle form submission for win scenario here
-            // You can use AJAX to submit the form data to the server
-            // Example:
-            // $.ajax({
-            //     url: 'submit_winner.php',
-            //     method: 'POST',
-            //     data: { prizeTitle: spinWheelData[ai]['spin_prizesTitle'], name: $('#name').val(), email: $('#email').val() },
-            //     success: function(response) {
-            //         console.log(response);
-            //     },
-            //     error: function(xhr, status, error) {
-            //         console.error(error);
-            //     }
-            // });
-        });
+        var winProbability = spinWheelData[ai]['Probability'];
+        console.log(winProbability);
+        var randomNumber = 21;
+
+        if ( randomNumber > winProbability) {
+            // Show popup for win
+            swal({
+                title: "Congratulations!",
+                text: "You won " + spinWheelData[ai]['spin_prizesTitle'],
+                type: "success",
+                content: {
+                    element: "input",
+                    attributes: {
+                        placeholder: "Enter your name",
+                        type: "text",
+                        id: "name-input"
+                    }
+                },
+                html: "<input type='email' id='email-input' placeholder='Enter your email' class='swal-content__input'>" +
+                    "<input type='hidden' id='prize-input' value='" + spinWheelData[ai]['spin_prizesTitle'] + "'>",
+                confirmButtonText: "Submit",
+                preConfirm: function() {
+                    return [
+                        document.getElementById('name-input').value,
+                        document.getElementById('email-input').value,
+                        document.getElementById('prize-input').value
+                    ]
+                }
+            }).then(function(result) {
+                if (result.dismiss !== swal.DismissReason.cancel) {
+                    // Handle form submission for win scenario here
+                    // Example:
+                    $.ajax({
+                        url: 'submit_winner.php',
+                        method: 'POST',
+                        data: {
+                            name: result[0],
+                            email: result[1],
+                            prizeTitle: result[2]
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                }
+            });
+        } else {
+            // Show popup for lose
+            swal({
+                title: "Sorry!",
+                text: "Oops! "+ spinWheelData[ai]['spin_prizesTitle'] + "You didn't win. Try again!",
+                type: "warning",
+                confirmButtonText: "OK",
+                closeOnConfirm: true
+            }).then(function() {
+                // Reset the spin wheel and allow the user to spin again
+                isStopped = false;
+                lock = false;
+                speed = 5;
+                create_spinner();
+            });
+        }
     }
     ctx.clearRect(0, 0, width, width);
     for (var i = 0; i < slices; i++) {
