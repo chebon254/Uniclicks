@@ -12,26 +12,26 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-// Check if winner ID is provided and valid
+// Check if contact user ID is provided and valid
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-    $winnerId = $_GET['id'];
+    $contactUserId = $_GET['id'];
 
-    // SQL to delete winner
-    $sql = "DELETE FROM `winners` WHERE id = $winnerId";
+    // SQL to delete contact user
+    $sql = "DELETE FROM `contact_users` WHERE id = $contactUserId";
 
     if ($conn->query($sql) === TRUE) {
-        // Winner deleted successfully
+        // Contact user deleted successfully
         // You can handle success response as needed
-        echo "Winner deleted successfully";
+        echo "Contact user deleted successfully";
     } else {
-        // Failed to delete winner
+        // Failed to delete contact user
         // You can handle error response as needed
-        echo "Error deleting winner: " . $conn->error;
+        echo "Error deleting contact user: " . $conn->error;
     }
 } else {
-    // Winner ID not provided or invalid
+    // Contact user ID not provided or invalid
     // You can handle error response as needed
-    echo "Invalid winner ID";
+    echo "Invalid contact user ID";
 }
 
 // Close database connection

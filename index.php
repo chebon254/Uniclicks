@@ -14,7 +14,10 @@ $upcoming_events_query = "SELECT `id`, `title`, `location`, `start_date`, `end_d
 $upcoming_events_result = $conn->query($upcoming_events_query);
 
 // Initialize error message
-$error = "";
+$signup_error = "";
+$contact_error = "";
+$contact_success ="";
+$signup_success ="";
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -29,10 +32,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->query($sql) === TRUE) {
         // User added successfully
         // Redirect to some page or display a success message
-        $success = "Signup successful";
+        $signup_success = "Signup successful";
     } else {
         // Failed to add user
-        $error = "Error: " . $conn->error;
+        $signup_error = "Error: " . $conn->error;
     }
 }
 
@@ -41,20 +44,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Fetch and sanitize form data
     $name = isset($_POST['name']) ? mysqli_real_escape_string($conn, $_POST['name']) : '';
     $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, $_POST['email']) : '';
-    $phone = isset($_POST['phone']) ? mysqli_real_escape_string($conn, $_POST['phone']) : '';
+    $company = isset($_POST['company']) ? mysqli_real_escape_string($conn, $_POST['company']) : '';
     $communication_type = isset($_POST['communication_type']) ? mysqli_real_escape_string($conn, $_POST['communication_type']) : '';
     $communication_id = isset($_POST['communication_id']) ? mysqli_real_escape_string($conn, $_POST['communication_id']) : '';
+    $message = isset($_POST['message']) ? mysqli_real_escape_string($conn, $_POST['message']) : '';
 
     // SQL to insert user data into the database
-    $sql = "INSERT INTO contact_users (name, email, phone, communication_type, communication_id) VALUES ('$name', '$email', '$phone', '$communication_type', '$communication_id')";
+    $sql = "INSERT INTO contact_users (name, email, company, communication_type, communication_id, message) VALUES ('$name', '$email', '$company', '$communication_type', '$communication_id', '$message')";
 
     if ($conn->query($sql) === TRUE) {
         // User added successfully
         // Redirect to some page or display a success message
-        $success = "Data submitted successfully";
+        $contact_success = "Data submitted successfully";
     } else {
         // Failed to add user
-        $error = "Error: " . $conn->error;
+        $contact_error = "Error: " . $conn->error;
     }
 }
 
@@ -127,13 +131,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-control text-center">
                     <img src="./admin/assets/css/img/logo.svg" alt="Uniclicks" width="100px">
                     <h1>Welcome!</h1>
-                    <?php if (!empty($error)) { ?>
+                    <?php if (!empty($signup_error)) { ?>
                         <div class="message">
-                            <p id="errorMessage"><?php echo $error; ?></p>
+                            <p id="errorMessage"><?php echo $signup_error; ?></p>
                         </div>
                     <?php } else{ ?>
                         <div class="message">
-                            <p id="successMessage"><?php echo $success; ?></p>
+                            <p id="successMessage"><?php echo $signup_success; ?></p>
                         </div>
                     <?php } ?>
                 </div>
@@ -267,13 +271,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-control text-center">
                 <img src="./admin/assets/css/img/logo.svg" alt="Uniclicks" width="100px">
                 <h1>Welcome!</h1>
-                <?php if (!empty($error)) { ?>
+                <?php if (!empty($contact_error)) { ?>
                     <div class="message">
-                        <p id="errorMessage"><?php echo $error; ?></p>
+                        <p id="errorMessage"><?php echo $contact_error; ?></p>
                     </div>
                 <?php } else{ ?>
                     <div class="message">
-                        <p id="successMessage"><?php echo $success; ?></p>
+                        <p id="successMessage"><?php echo $contact_success; ?></p>
                     </div>
                 <?php } ?>
             </div>
@@ -288,9 +292,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" name="email" id="email" placeholder="Enter Email" required>
             </div>
             <div class="form-control">
-                <label for="phone">Phone</label>
+                <label for="company">Phone</label>
                 <br>
-                <input type="text" name="phone" id="phone" placeholder="Enter Phone Number" required>
+                <input type="text" name="company" id="company" placeholder="Enter company" required>
             </div>
             <div class="form-control">
                 <label>Communication Type</label>
@@ -300,9 +304,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label><input type="radio" name="communication_type" value="Email" > Email</label>
             </div>
             <div class="form-control">
-                <label for="communication_id">Communication ID</label>
+                <label for="communication_id">Communication type ID</label>
                 <br>
-                <input type="text" name="communication_id" id="communication_id" placeholder="Enter Communication ID" required>
+                <input type="text" name="communication_id" id="communication_id" placeholder="Skype ID or Phone No. or Email" required>
+            </div>
+            <div class="form-control">
+                <label for="communication_id">Message</label>
+                <br>
+                <textarea name="message" id="message-input" style="width: 100%;" rows="10" placeholder="Enter message here..."></textarea>
             </div>
             <div class="form-control">
                 <button class="login-btn" type="submit">Submit</button>
@@ -446,6 +455,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- == Scripts == -->
     <script src="js/script.js" defer></script>
     <script src="assets/js/spin.js"></script>
+    <script>
+        // Get references to the message elements
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Function to hide messages after 4 seconds
+        function hideMessages() {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
+
+        // Call hideMessages after 4 seconds
+        setTimeout(hideMessages, 4000);
+    </script>
     <script>
         let currentIndexPast = 0;
         let currentIndexUpcoming = 0;

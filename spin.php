@@ -15,11 +15,29 @@ if ($conn->connect_error) {
 $sql = "SELECT `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes`";
 $result = $conn->query($sql);
 
+$prizewon_success = "";
+$prizewon_error = "";
+
 // Store the fetched data in an array
 $spinWheelData = array();
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $spinWheelData[] = $row;
+    }
+}
+
+// Insert winner's data into the database
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $prizeTitle = $_POST["prizeTitle"];
+
+    $sql = "INSERT INTO `winners`(`name`, `email`, `prize`) VALUES ('$name', '$email', '$prizeTitle')";
+
+    if ($conn->query($sql) === TRUE) {
+        $prizewon_success = "Data inserted successfully";
+    } else {
+        $prizewon_error = "Error: " . $sql . "<br>" . $conn->error;
     }
 }
 $conn->close();
@@ -75,7 +93,66 @@ $conn->close();
         crossorigin="anonymous" />
 
         <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Required library -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" ></script>
+	
+	<!-- Bootstrap theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        body{
+            position: relative;
+        }
+        .popup-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
+        .popup-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <style>
@@ -104,6 +181,40 @@ $conn->close();
     }
 
 </style>
+<div class="popup-container" id="popup-container">
+        <div class="popup-card">
+            <div id="win-card" style="display: none;">
+                <h2>Congratulations!</h2>
+                <p>You won <span id="win-prize"></span></p>
+                <?php if (!empty($signup_error)) { ?>
+                    <div class="message">
+                        <p id="errorMessage"><?php echo $prizewon_error; ?></p>
+                    </div>
+                <?php } else { ?>
+                    <div class="message">
+                        <p id="successMessage"><?php echo $prizewon_success; ?></p>
+                    </div>
+                <?php } ?>
+                <form id="win-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <input type="hidden" id="prize-input" name="prize" value="">
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+            </div>
+            <div id="lose-card" style="display: none;">
+                <h2>Sorry!</h2>
+                <p>Oops! <span id="lose-prize"></span> You didn't win. Try again!</p>
+                <button class="btn" onclick="closePopup()">OK</button>
+            </div>
+        </div>
+    </div>
 <div class="container">  
   <h4 align="center">Dynamic Spin Wheel</h4>   
   <div class="row">
@@ -187,63 +298,12 @@ function spin() {
         var ai = Math.floor(((360 - deg - 90) % 360) / sliceDeg); // deg 2 Array Index
         ai = (slices + ai) % slices; // Fix negative index
         var winProbability = spinWheelData[ai]['Probability'];
-        console.log(winProbability);
         var randomNumber = 21;
 
-        if ( randomNumber > winProbability) {
-            // Show popup for win
-            swal({
-                title: "Congratulations!",
-                text: "You won " + spinWheelData[ai]['spin_prizesTitle'],
-                type: "success",
-                content: {
-                    element: "input",
-                    attributes: {
-                        placeholder: "Enter your name",
-                        type: "text",
-                        id: "name-input"
-                    }
-                },
-                html: "<input type='email' id='email-input' placeholder='Enter your email' class='swal-content__input'>" +
-                    "<input type='hidden' id='prize-input' value='" + spinWheelData[ai]['spin_prizesTitle'] + "'>",
-                confirmButtonText: "Submit",
-                preConfirm: function() {
-                    return [
-                        document.getElementById('name-input').value,
-                        document.getElementById('email-input').value,
-                        document.getElementById('prize-input').value
-                    ]
-                }
-            }).then(function(result) {
-                if (result.dismiss !== swal.DismissReason.cancel) {
-                    // Handle form submission for win scenario here
-                    // Example:
-                    $.ajax({
-                        url: 'submit_winner.php',
-                        method: 'POST',
-                        data: {
-                            name: result[0],
-                            email: result[1],
-                            prizeTitle: result[2]
-                        },
-                        success: function(response) {
-                            console.log(response);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(error);
-                        }
-                    });
-                }
-            });
+        if (randomNumber > winProbability) {
+            showWinPopup(spinWheelData[ai]['spin_prizesTitle']);
         } else {
-            // Show popup for lose
-            swal({
-                title: "Sorry!",
-                text: "Oops! "+ spinWheelData[ai]['spin_prizesTitle'] + "You didn't win. Try again!",
-                type: "warning",
-                confirmButtonText: "OK",
-                closeOnConfirm: true
-            })
+            showLosePopup(spinWheelData[ai]['spin_prizesTitle']);
         }
     }
     ctx.clearRect(0, 0, width, width);
@@ -276,7 +336,53 @@ setTimeout(function() {
 function deg2rad(deg) {
     return deg * Math.PI/180;
 }
+        function showWinPopup(prizeTitle) {
+            document.getElementById('win-card').style.display = 'block';
+            document.getElementById('win-prize').textContent = prizeTitle;
+            document.getElementById('prize-input').value = prizeTitle;
+            document.getElementById('popup-container').style.display = 'flex';
+        }
 
+        function showLosePopup(prizeTitle) {
+            document.getElementById('lose-card').style.display = 'block';
+            document.getElementById('lose-prize').textContent = prizeTitle;
+            document.getElementById('popup-container').style.display = 'flex';
+        }
+        function closePopup() {
+                document.getElementById('popup-container').style.display = 'none';
+                document.getElementById('win-card').style.display = 'none';
+                document.getElementById('lose-card').style.display = 'none';
+            }
+        document.addEventListener('DOMContentLoaded', function() {
+
+            document.getElementById('win-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const prizeTitle = document.getElementById('prize-input').value;
+
+                // Send data to the server using AJAX or fetch
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('prizeTitle', prizeTitle);
+
+                fetch('', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    closePopup();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            // ... (existing code) ...
+        });
 function rand(min, max) {
     return Math.random() * (max - min) + min;
 }

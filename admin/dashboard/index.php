@@ -21,13 +21,20 @@ $events_list = "SELECT `id`, `title`, `location`, `start_date`, `end_date`, `thu
 $result_event = $conn->query($events_list);
 
 // Perform database query to fetch data
-$sql = "SELECT `id`, `full_name`, `email`, `phone`, `prize_id`, `counter` FROM `signup_users` WHERE 1";
+$sql = "SELECT `id`, `full_name`, `email`, `phone`, `prize` FROM `signup_users` WHERE 1";
 $result_signup_users = $conn->query($sql);
 
 // Perform database query to fetch data
 $sql = "SELECT `spin_prizesID`, `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes` WHERE 1";
 $result_spin_prizes = $conn->query($sql);
 
+// Perform database query to fetch data
+$sql = "SELECT `id`, `name`, `email`, `company`, `communication_type`, `communication_id`, `prize_id`, `prize`, `message` FROM `contact_users` WHERE 1";
+$result_contact_users = $conn->query($sql);
+
+// Perform database query to fetch data
+$sql = "SELECT `id`, `name`, `email`, `prize` FROM `winners` WHERE 1";
+$result_winners = $conn->query($sql);
 
 // Close database connection
 $conn->close();
@@ -257,6 +264,16 @@ $conn->close();
                         </div>
                     </div>
                 </button>
+                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'winnerstb')">
+                    <div class="contents">
+                        <div class="btn-icon">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <div class="btn-text">
+                            Winners
+                        </div>
+                    </div>
+                </button>
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'accountstb')">
                     <div class="contents">
                         <div class="btn-icon">
@@ -300,39 +317,6 @@ $conn->close();
                 <br>
                 <br>
                 <br>
-                <h3>Settings</h3>
-                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'chartstb')">
-                    <div class="contents">
-                        <div class="btn-icon">
-                            <i class="fa-solid fa-chart-pie"></i>
-                        </div>
-                        <div class="btn-text">
-                            Charts
-                        </div>
-                    </div>
-                </button>
-                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'trendstb')">
-                    <div class="contents">
-                        <div class="btn-icon">
-                            <i class="fa-solid fa-arrow-trend-up"></i>
-                        </div>
-                        <div class="btn-text">
-                            Trends
-                        </div>
-                    </div>
-                </button>
-                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'billingtb')">
-                    <div class="contents">
-                        <div class="btn-icon">
-                            <i class="fa-regular fa-credit-card"></i>
-                        </div>
-                        <div class="btn-text">
-                            Billing
-                        </div>
-                    </div>
-                </button>
-                <br>
-                <br>
                 <button class="side-btn-logout" onclick="location.href='logout.php'">
                     <i class="fa-solid fa-circle-arrow-left"></i> Logout
                 </button>
@@ -358,13 +342,12 @@ $conn->close();
                     <p>Hello, Ido. Welcome back!</p>
                 </div>
                 <div class="header-account">
-                    <div class="nav-item">
+                    <!-- <div class="nav-item">
                         <a href="#" class="message-icon">
                             <i class="fa fa-envelope"></i>
                             <span class="badge">3</span>
                         </a>
                         <div class="dropdown-menu message-dropdown">
-                            <!-- Message previews will be added here dynamically -->
                         </div>
                     </div>
 
@@ -374,9 +357,8 @@ $conn->close();
                             <span class="badge">2</span>
                         </a>
                         <div class="dropdown-menu notification-dropdown">
-                            <!-- Notification items will be added here dynamically -->
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="nav-item">
                         <a href="#" class="profile-icon">
@@ -474,6 +456,38 @@ $conn->close();
                         </tbody>
                     </table>
                 </div>
+                <div id="winnerstb" class="winners-tab dash-tab-content">
+                    <div class="add-offer">
+                        <h2>Winners</h2>
+                        <span></span>
+                    </div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Prize</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $rowNumber = 1; // Initialize row number
+                        while ($row = $result_winners->fetch_assoc()) : ?>
+                            <tr class="winners-delete-button-container">
+                                <td><?php echo $rowNumber++; ?></td> <!-- Increment and display row number -->
+                                <td><?php echo $row['name']; ?></td>
+                                <td><?php echo $row['email']; ?></td>
+                                <td><?php echo $row['prize']; ?></td>
+                                <!-- You can add additional columns as needed -->
+                                <td><button class="winner-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
+                            </tr>
+                        <?php endwhile; ?>
+                        </tbody>
+                      </table>
+                      
+                </div>
                 <div id="accountstb" class="accounts-tab dash-tab-content">
                     <div class="add-offer">
                         <h2>User Accounts</h2>
@@ -487,7 +501,6 @@ $conn->close();
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Prize</th>
-                            <th>Counter</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -503,8 +516,7 @@ $conn->close();
                                         <td><?php echo $row['full_name']; ?></td>
                                         <td><?php echo $row['email']; ?></td>
                                         <td><?php echo $row['phone']; ?></td>
-                                        <td><?php echo $row['prize_id']; ?></td>
-                                        <td><?php echo $row['counter']; ?></td>
+                                        <td><?php echo $row['prize']; ?></td>
                                         <!-- Additional table cells can be added as needed -->
                                     </tr>
                             <?php
@@ -529,100 +541,27 @@ $conn->close();
                             <th>Company</th>
                             <th>Communication</th>
                             <th>ID</th>
+                            <th>Prize</th>
                             <th>Message</th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>johndoe@example.com</td>
-                            <td>ABC Company</td>
-                            <td>WhatsApp</td>
-                            <td>1234567890</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                          </tr>
-                          <tr>
-                            <td>2</td>
-                            <td>Jane Smith</td>
-                            <td>janesmith@example.com</td>
-                            <td>XYZ Corporation</td>
-                            <td>Telegram</td>
-                            <td>@janesmith</td>
-                            <td>Consectetur adipiscing elit</td>
-                          </tr>
-                          <tr>
-                            <td>3</td>
-                            <td>Michael Johnson</td>
-                            <td>michael@example.com</td>
-                            <td>123 Industries</td>
-                            <td>Email</td>
-                            <td>michael@example.com</td>
-                            <td>Sed do eiusmod tempor incididunt</td>
-                          </tr>
-                          <tr>
-                            <td>4</td>
-                            <td>Sarah Brown</td>
-                            <td>sarah@example.com</td>
-                            <td>Smith & Co.</td>
-                            <td>Skype</td>
-                            <td>sarah_brown</td>
-                            <td>Ut labore et dolore magna aliqua</td>
-                          </tr>
-                          <tr>
-                            <td>5</td>
-                            <td>David Lee</td>
-                            <td>david@example.com</td>
-                            <td>Lee Enterprises</td>
-                            <td>WhatsApp</td>
-                            <td>0987654321</td>
-                            <td>Ut enim ad minim veniam</td>
-                          </tr>
-                          <tr>
-                            <td>6</td>
-                            <td>Emily Wilson</td>
-                            <td>emily@example.com</td>
-                            <td>Wilson Group</td>
-                            <td>Email</td>
-                            <td>emily@example.com</td>
-                            <td>Quis nostrud exercitation ullamco</td>
-                          </tr>
-                          <tr>
-                            <td>7</td>
-                            <td>James Taylor</td>
-                            <td>james@example.com</td>
-                            <td>Taylor Corporation</td>
-                            <td>Telegram</td>
-                            <td>@jamestaylor</td>
-                            <td>Laboris nisi ut aliquip ex ea commodo</td>
-                          </tr>
-                          <tr>
-                            <td>8</td>
-                            <td>Emma Clark</td>
-                            <td>emma@example.com</td>
-                            <td>Clark Industries</td>
-                            <td>Skype</td>
-                            <td>emma_clark</td>
-                            <td>Duis aute irure dolor in reprehenderit</td>
-                          </tr>
-                          <tr>
-                            <td>9</td>
-                            <td>Daniel Brown</td>
-                            <td>daniel@example.com</td>
-                            <td>Brown Enterprises</td>
-                            <td>Email</td>
-                            <td>daniel@example.com</td>
-                            <td>Excepteur sint occaecat cupidatat non proident</td>
-                          </tr>
-                          <tr>
-                            <td>10</td>
-                            <td>Lisa Miller</td>
-                            <td>lisa@example.com</td>
-                            <td>Miller Group</td>
-                            <td>WhatsApp</td>
-                            <td>5678901234</td>
-                            <td>Sunt in culpa qui officia deserunt</td>
-                          </tr>
+                        <?php
+                        $rowNumber = 1; // Initialize row number
+                        while ($row = $result_contact_users->fetch_assoc()) : ?>
+                            <tr class="contact-user-row contact-delete-button-container"">
+                                <td><?php echo $rowNumber++; ?></td> <!-- Increment and display row number -->
+                                <td><?php echo $row['name']; ?></td>
+                                <td><?php echo $row['email']; ?></td>
+                                <td><?php echo $row['company']; ?></td>
+                                <td><?php echo $row['communication_type']; ?></td>
+                                <td><?php echo $row['communication_id']; ?></td>
+                                <td><?php echo $row['prize']; ?></td>
+                                <td><?php echo substr($row['message'], 0, 20) . '...'; ?></td>
+                                <td><button class="contact-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
+                            </tr>
+                        <?php endwhile; ?>
                         </tbody>
                       </table>
                       
@@ -700,15 +639,6 @@ $conn->close();
                       </table>
                       
                 </div>
-                <div id="chartstb" class="charts-tab dash-tab-content">
-                    <h1>Charts Coming Soon</h1>
-                </div>
-                <div id="trendstb" class="trends-tab dash-tab-content">
-                    <h1>Trends Coming Soon</h1>
-                </div>
-                <div id="billingtb" class="billing-tab dash-tab-content">
-                    <h1>Billing Coming Soon</h1>
-                </div>
             </div>
         </div>
     </main>
@@ -749,6 +679,69 @@ $conn->close();
                         })
                         .catch(error => console.error('Error:', error));
                 }
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.contact-delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const eventId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this event?')) {
+                    fetch('./delete_contact.php?id=' + eventId, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                // Refresh the page or update the table as needed
+                                location.reload(); // For example, refresh the page
+                            } else {
+                                console.error('Failed to delete event');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    </script>
+    <script>
+        document.querySelectorAll('.winner-delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const eventId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this event?')) {
+                    fetch('./delete_winner.php?id=' + eventId, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                // Refresh the page or update the table as needed
+                                location.reload(); // For example, refresh the page
+                            } else {
+                                console.error('Failed to delete event');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    </script>
+    <script>
+        // Get all delete button containers
+        const contactdeleteButtonContainers = document.querySelectorAll('.contact-delete-button-container');
+
+        // Add event listener to each delete button container
+        contactdeleteButtonContainers.forEach(container => {
+            container.addEventListener('mouseenter', () => {
+                // Show the delete button when mouse enters the container
+                const contactdeleteButton = container.querySelector('.contact-delete-btn');
+                contactdeleteButton.style.visibility = 'visible';
+            });
+
+            container.addEventListener('mouseleave', () => {
+                // Hide the delete button when mouse leaves the container
+                const contactdeleteButton = container.querySelector('.contact-delete-btn');
+                contactdeleteButton.style.visibility = 'hidden';
+            });
+
+            // Add event listener to delete button
+            container.querySelector('.contact-delete-btn').addEventListener('click', () => {
+                const eventId = container.getAttribute('data-id');
+                // Perform deletion logic here (will be added in the next response)
             });
         });
     </script>
@@ -821,7 +814,31 @@ $conn->close();
             });
         });
     </script>
+    <script>
+        // Get all delete button containers
+        const winnersdeleteButtonContainers = document.querySelectorAll('.winners-delete-button-container');
 
+        // Add event listener to each delete button container
+        winnersdeleteButtonContainers.forEach(container => {
+            container.addEventListener('mouseenter', () => {
+                // Show the delete button when mouse enters the container
+                const winnerdeleteButton = container.querySelector('.winner-delete-btn');
+                winnereleteButton.style.visibility = 'visible';
+            });
+
+            container.addEventListener('mouseleave', () => {
+                // Hide the delete button when mouse leaves the container
+                const winnerdeleteButton = container.querySelector('.winner-delete-btn');
+                winnerdeleteButton.style.visibility = 'hidden';
+            });
+
+            // Add event listener to delete button
+            container.querySelector('.winner-delete-btn').addEventListener('click', () => {
+                const prizeId = container.getAttribute('data-id');
+                // Perform deletion logic here (will be added in the next response)
+            });
+        });
+    </script>
 </body>
 
 </html>

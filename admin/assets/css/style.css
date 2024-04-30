@@ -169,6 +169,16 @@ option {
     font-weight: 400;
     color: var(--ink);
 }
+textarea{
+    width: 100%;
+    outline: none;
+    border: 1px solid #f2f0f9;
+    border-radius: 16px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+}
 
 .input-container {
     position: relative;
@@ -270,8 +280,8 @@ main.dashboard-pg {
     height: 100%;
     width: 100%;
     display: flex;
-    align-items: flex-start;
     justify-content: flex-start;
+    align-items: stretch;
 }
 
 .side-navigation {
@@ -795,6 +805,8 @@ img.dash-events-thumb {
 
 /* Initially hide the delete button */
 .event-delete-btn,
+.contact-delete-btn,
+.winner-delete-btn,
 .prize-delete-btn {
     visibility: hidden;
     padding: 4px 20px;
@@ -809,6 +821,8 @@ img.dash-events-thumb {
 }
 
 .event-delete-btn:hover,
+.contact-delete-btn:hover,
+.winner-delete-btn:hover,
 .prize-delete-btn:hover {
     transition: all ease-in 200ms;
     visibility: hidden;

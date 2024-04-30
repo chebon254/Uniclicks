@@ -1,3 +1,16 @@
+// Get references to the message elements
+const successMessage = document.getElementById('successMessage');
+const errorMessage = document.getElementById('errorMessage');
+
+// Function to hide messages after 4 seconds
+function hideMessages() {
+    successMessage.style.display = 'none';
+    errorMessage.style.display = 'none';
+}
+
+// Call hideMessages after 4 seconds
+setTimeout(hideMessages, 4000);
+
 /* == Dashboard == */
 // Dummy data for messages and notifications
 const messages = [
