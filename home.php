@@ -132,11 +132,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <h1>Welcome!</h1>
                     <?php if (!empty($signup_error)) { ?>
                         <div class="message">
-                            <p id="errorMessage"><?php echo $signup_error; ?></p>
+                            <p id="errorMessage"><?php echo $signup_error; ?></div>
                         </div>
                     <?php } else{ ?>
                         <div class="message">
-                            <p id="successMessage"><?php echo $signup_success; ?></p>
+                            <p id="successMessage"><?php echo $signup_success; ?></div>
                         </div>
                     <?php } ?>
                 </div>
@@ -272,11 +272,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h1>Welcome!</h1>
                 <?php if (!empty($contact_error)) { ?>
                     <div class="message">
-                        <p id="errorMessage"><?php echo $contact_error; ?></p>
+                        <p id="errorMessage"><?php echo $contact_error; ?></div>
                     </div>
                 <?php } else{ ?>
                     <div class="message">
-                        <p id="successMessage"><?php echo $contact_success; ?></p>
+                        <p id="successMessage"><?php echo $contact_success; ?></div>
                     </div>
                 <?php } ?>
             </div>
@@ -286,12 +286,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" name="name" id="cname" placeholder="Enter Name" required>
             </div>
             <div class="form-control">
-                <label for="email">Email</label>
-                <br>
-                <input type="email" name="email" id="email" placeholder="Enter Email" required>
-            </div>
-            <div class="form-control">
-                <label for="company">Phone</label>
+                <label for="company">Company</label>
                 <br>
                 <input type="text" name="company" id="company" placeholder="Enter company" required>
             </div>
@@ -379,34 +374,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Past Events Carousel -->
         <div class="carousel-container">
             <div id="past-events-carousel" class="carousel">
-                <?php while ($row = $past_events_result->fetch_assoc()) : ?>
+                <?php while ($row = $upcoming_events_result->fetch_assoc()) : ?>
                     <!-- Display past events here -->
-                    <div class="carousel-item">
-                        <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" alt="Event Thumbnail">
-                        <div class="event-details">
-                            <h3><?php echo htmlspecialchars($row['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($row['location']); ?></p>
-                            <?php
-                            // Convert start and end dates to DateTime objects for comparison
-                            $start_date = new DateTime($row['start_date']);
-                            $end_date = new DateTime($row['end_date']);
-
-                            // Check if start and end dates are on the same day
-                            if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
-                                // Display only start date
-                                echo "<p>" . $start_date->format('d, M Y') . "</p>";
-                            } else {
-                                // Check if start and end dates are in the same month
-                                if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
-                                    // Display start date day and end date day month and year
-                                    echo "<p>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</p>";
-                                } else {
-                                    // Display both start and end dates
-                                    echo "<p>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</p>";
-                                }
-                            }
-                            ?>
+                    <div class="swiper-slide events-swiper__slide">
+                        <div class="events-swiper__img">
+                            <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" width="380" height="420" alt="Uniclicks" loading="lazy"
+                            aria-hidden="true" />
                         </div>
+                        <div class="events-swiper__city"><?php echo htmlspecialchars($row['title']); ?></div>
+                        <div class="events-swiper__caption"><?php echo htmlspecialchars($row['location']); ?></div>
+                        <?php
+                        // Convert start and end dates to DateTime objects for comparison
+                        $start_date = new DateTime($row['start_date']);
+                        $end_date = new DateTime($row['end_date']);
+
+                        // Check if start and end dates are on the same day
+                        if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
+                            // Display only start date
+                            echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . "</div>";
+                        } else {
+                            // Check if start and end dates are in the same month
+                            if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
+                                // Display start date day and end date day month and year
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</div>";
+                            } else {
+                                // Display both start and end dates
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</div>";
+                            }
+                        }
+                        ?>
                     </div>
                 <?php endwhile; ?>
             </div>
@@ -422,7 +418,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" alt="Event Thumbnail">
                         <div class="event-details">
                             <h3><?php echo htmlspecialchars($row['title']); ?></h3>
-                            <p><?php echo htmlspecialchars($row['location']); ?></p>
+                            <div class='events-swiper__date'><?php echo htmlspecialchars($row['location']); ?></div>
                             <?php
                             // Convert start and end dates to DateTime objects for comparison
                             $start_date = new DateTime($row['start_date']);
@@ -431,15 +427,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             // Check if start and end dates are on the same day
                             if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
                                 // Display only start date
-                                echo "<p>" . $start_date->format('d, M Y') . "</p>";
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . "</div>";
                             } else {
                                 // Check if start and end dates are in the same month
                                 if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
                                     // Display start date day and end date day month and year
-                                    echo "<p>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</p>";
+                                    echo "<div class='events-swiper__date'>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</div>";
                                 } else {
                                     // Display both start and end dates
-                                    echo "<p>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</p>";
+                                    echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</div>";
                                 }
                             }
                             ?>

@@ -29,7 +29,7 @@ $sql = "SELECT `spin_prizesID`, `spin_prizesTitle`, `Probability`, `BackgroundCo
 $result_spin_prizes = $conn->query($sql);
 
 // Perform database query to fetch data
-$sql = "SELECT `id`, `name`, `email`, `company`, `communication_type`, `communication_id`, `prize_id`, `prize`, `message` FROM `contact_users` WHERE 1";
+$sql = "SELECT `id`, `name`, `company`, `communication_type`, `communication_id`, `prize_id`, `prize`, `message` FROM `contact_users` WHERE 1";
 $result_contact_users = $conn->query($sql);
 
 // Perform database query to fetch data
@@ -537,12 +537,12 @@ $conn->close();
                           <tr>
                             <th>No</th>
                             <th>Name</th>
-                            <th>Email</th>
                             <th>Company</th>
                             <th>Communication</th>
                             <th>ID</th>
                             <th>Prize</th>
                             <th>Message</th>
+                            <th>Status</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -553,12 +553,12 @@ $conn->close();
                             <tr class="contact-user-row contact-delete-button-container"">
                                 <td><?php echo $rowNumber++; ?></td> <!-- Increment and display row number -->
                                 <td><?php echo $row['name']; ?></td>
-                                <td><?php echo $row['email']; ?></td>
                                 <td><?php echo $row['company']; ?></td>
                                 <td><?php echo $row['communication_type']; ?></td>
                                 <td><?php echo $row['communication_id']; ?></td>
                                 <td><?php echo $row['prize']; ?></td>
                                 <td><?php echo substr($row['message'], 0, 20) . '...'; ?></td>
+                                <td><input type="checkbox"></td>
                                 <td><button class="contact-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
                             </tr>
                         <?php endwhile; ?>

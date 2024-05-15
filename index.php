@@ -19,38 +19,37 @@ $contact_error = "";
 $contact_success ="";
 $signup_success ="";
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Fetch and sanitize form data
-    $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
+// // Check if form is submitted
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//     // Fetch and sanitize form data
+//     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
+//     $email = mysqli_real_escape_string($conn, $_POST['email']);
+//     $phone = mysqli_real_escape_string($conn, $_POST['phone']);
 
-    // SQL to insert user data into the database
-    $sql = "INSERT INTO signup_users (full_name, email, phone) VALUES ('$full_name', '$email', '$phone')";
+//     // SQL to insert user data into the database
+//     $sql = "INSERT INTO signup_users (full_name, email, phone) VALUES ('$full_name', '$email', '$phone')";
 
-    if ($conn->query($sql) === TRUE) {
-        // User added successfully
-        // Redirect to some page or display a success message
-        $signup_success = "Signup successful";
-    } else {
-        // Failed to add user
-        $signup_error = "Error: " . $conn->error;
-    }
-}
+//     if ($conn->query($sql) === TRUE) {
+//         // User added successfully
+//         // Redirect to some page or display a success message
+//         $signup_success = "Signup successful";
+//     } else {
+//         // Failed to add user
+//         $signup_error = "Error: " . $conn->error;
+//     }
+// }
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Fetch and sanitize form data
     $name = isset($_POST['name']) ? mysqli_real_escape_string($conn, $_POST['name']) : '';
-    $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, $_POST['email']) : '';
     $company = isset($_POST['company']) ? mysqli_real_escape_string($conn, $_POST['company']) : '';
     $communication_type = isset($_POST['communication_type']) ? mysqli_real_escape_string($conn, $_POST['communication_type']) : '';
     $communication_id = isset($_POST['communication_id']) ? mysqli_real_escape_string($conn, $_POST['communication_id']) : '';
     $message = isset($_POST['message']) ? mysqli_real_escape_string($conn, $_POST['message']) : '';
 
     // SQL to insert user data into the database
-    $sql = "INSERT INTO contact_users (name, email, company, communication_type, communication_id, message) VALUES ('$name', '$email', '$company', '$communication_type', '$communication_id', '$message')";
+    $sql = "INSERT INTO contact_users (name, company, communication_type, communication_id, message) VALUES ('$name', '$company', '$communication_type', '$communication_id', '$message')";
 
     if ($conn->query($sql) === TRUE) {
         // User added successfully
@@ -61,6 +60,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $contact_error = "Error: " . $conn->error;
     }
 }
+
+// Fetch spin wheel data from the database
+$sql = "SELECT `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes`";
+$result = $conn->query($sql);
+
+$prizewon_success = "";
+$prizewon_error = "";
+
+// Store the fetched data in an array
+$spinWheelData = array();
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $spinWheelData[] = $row;
+    }
+}
+
+// // Insert winner's data into the database
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//     $name = $_POST["wname"];
+//     $email = $_POST["wemail"];
+//     $prizeTitle = $_POST["prizeTitle"];
+
+//     $sql = "INSERT INTO `winners`(`name`, `email`, `prize`) VALUES ('$name', '$email', '$prizeTitle')";
+
+//     if ($conn->query($sql) === TRUE) {
+//         $prizewon_success = "Data inserted successfully";
+//     } else {
+//         $prizewon_error = "Error: " . $sql . "<br>" . $conn->error;
+//     }
+// }
+
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,6 +139,83 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <!-- == Icons == -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         crossorigin="anonymous" />
+        <style>
+        body{
+            position: relative;
+        }
+        .popup-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .popup-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    .col-xs-12{
+        position: relative;
+        z-index: 0;
+        width: 480px !important;
+        height: 480px !important;
+        border-radius: 240px;
+        border: 10px solid #525252;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+    .spin-wheel-arrow{
+        min-height: 20px;
+        width: 20px;
+        position: absolute;
+        top:0;
+        left:50%;
+        transform: translateX(-50%);
+        color:#000000;
+        z-index: 10;
+        font-size: 28px;
+    }
+
+</style>
 </head>
 
 <body>
@@ -188,8 +296,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="container">
           <div class="about__wrapper">
             <div class="about-img">
-              <img src="./img/about-img.png" width="480" height="480" alt="About Uniclicks" loading="lazy"
-                aria-hidden="true" />
+              <div class="col-xs-12" align="center">
+                <span class="spin-wheel-arrow"><i class="fa-solid fa-down-long"></i></span>
+                <div id="wheel" style="width: 460px;">
+                    <canvas id="canvas" width="460" height="460"></canvas>
+                </div>
+              </div> 
+              <button type="button" class="btn btn-success" onclick="spin()">Spin Now!</button>
             </div>
             <div class="about-info">
               <h2 class="title about-info__title">About Us</h2>
@@ -362,7 +475,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           padding: 10px 20px;
           cursor: pointer;  
           border-radius: 25px; 
-          font-weight: 500; 
+          font-size: clamp(1.4rem, 1.3255813953rem + 0.2325581395vw, 1.6rem);
           margin: 20px auto;
           display: flex;
           align-items: center;
@@ -383,8 +496,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: block !important;
           }
         </style>
-      <section id="past-events" class="events past-events-sect" style="transition: opacity 2.5s ease, transform 2.5s ease;
-  transform-origin: top;">
+      <section id="past-events" class="events past-events-sect" style="transition: opacity 2.5s ease, transform 2.5s ease; transform-origin: top;">
         <div class="container">
           <div class="events__wrapper">
             <div class="events__header">
@@ -392,8 +504,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <div class="events-arrows past-events-arrows">
                 <button type="button" class="events-arrows__item past-events-arrows__left" data-carousel="past-events">
                   <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20.5 8H1.5M1.5 8L8.5 1M1.5 8L8.5 15" stroke="#B3B3B3" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M20.5 8H1.5M1.5 8L8.5 1M1.5 8L8.5 15" stroke="#B3B3B3" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
                   </svg>
                 </button>
                 <button type="button" class="events-arrows__item past-events-arrows__right" data-carousel="past-events">
@@ -406,74 +518,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="swiper events-swiper past-events-swiper">
               <div class="swiper-wrapper">
+                <?php while ($row = $past_events_result->fetch_assoc()) : ?>
+                <!-- Display past events here -->
                 <div class="swiper-slide events-swiper__slide">
                   <div class="events-swiper__img">
-                    <img src="./img/SIGMA.png" width="380" height="420" alt="Sigma Dubai" loading="lazy"
-                      aria-hidden="true" />
+                    <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" width="380"
+                      height="420" alt="Uniclicks" loading="lazy" aria-hidden="true" />
                   </div>
-                  <div class="events-swiper__city">SIGMA x Affiliate World</div>
-                  <div class="events-swiper__caption">Dubai</div>
-                  <div class="events-swiper__date">27 February 2024</div>
+                  <div class="events-swiper__city">
+                    <?php echo htmlspecialchars($row['title']); ?>
+                  </div>
+                  <div class="events-swiper__caption">
+                    <?php echo htmlspecialchars($row['location']); ?>
+                  </div>
+                  <?php
+                        // Convert start and end dates to DateTime objects for comparison
+                        $start_date = new DateTime($row['start_date']);
+                        $end_date = new DateTime($row['end_date']);
+
+                        // Check if start and end dates are on the same day
+                        if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
+                            // Display only start date
+                            echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . "</div>";
+                        } else {
+                            // Check if start and end dates are in the same month
+                            if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
+                                // Display start date day and end date day month and year
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</div>";
+                            } else {
+                                // Display both start and end dates
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</div>";
+                            }
+                        }
+                        ?>
                 </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <img src="./img/TT-MEETUP.png" width="380" height="420" alt="Dubai, UAE" loading="lazy"
-                      aria-hidden="true" />
-                  </div>
-                  <div class="events-swiper__city">TT Meetup</div>
-                  <div class="events-swiper__caption">Dubai, UAE</div>
-                  <div class="events-swiper__date">27 February 2024</div>
-                </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <img src="./img/AFFILIATE-WORLD-DUBAI.png" width="380" height="420" alt="TT Meetup" loading="lazy"
-                      aria-hidden="true" />
-                  </div>
-                  <div class="events-swiper__city">Affiliate</div>
-                  <div class="events-swiper__caption">World Dubai</div>
-                  <div class="events-swiper__date">27-29 February 2024</div>
-                </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <img src="./img/SIGMA.png" width="380" height="420" alt="Sigma Dubai" loading="lazy"
-                      aria-hidden="true" />
-                  </div>
-                  <div class="events-swiper__city">SIGMA x Affiliate World</div>
-                  <div class="events-swiper__caption">Dubai</div>
-                  <div class="events-swiper__date">27 February 2024</div>
-                </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <div class="swiper-slide events-swiper__slide">
-                      <div class="events-swiper__img">
-                        <img src="./img/TT-MEETUP.png" width="380" height="420" alt="Dubai, UAE" loading="lazy"
-                          aria-hidden="true" />
-                      </div>
-                      <div class="events-swiper__city">TT Meetup</div>
-                      <div class="events-swiper__caption">Dubai, UAE</div>
-                      <div class="events-swiper__date">27 February 2024</div>
-                    </div>
-                    <div class="swiper-slide events-swiper__slide">
-                      <div class="events-swiper__img">
-                        <div class="swiper-slide events-swiper__slide">
-                          <div class="events-swiper__img">
-                          </div>
-                          <div class="swiper-slide events-swiper__slide">
-                            <div class="events-swiper__img">
-                              <img src="./img/AFFILIATE-WORLD-DUBAI.png" width="380" height="420" alt="TT Meetup"
-                                loading="lazy" aria-hidden="true" />
-                            </div>
-                            <div class="events-swiper__city">Affiliate</div>
-                            <div class="events-swiper__caption">World Dubai</div>
-                            <div class="events-swiper__date">27-29 February 2024</div>
-                          </div>
-                        </div>
-                      </div>
-                      <button class="btn-main events__btn triggerModalForm">
-                        Contact Us
-                      </button>
-                    </div>
-                  </div>
+                <?php endwhile; ?>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
       <section id="events" class="events">
         <div class="container">
@@ -484,8 +567,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="button" class="events-arrows__item upcoming-events-arrows__left"
                   data-carousel="upcoming-events">
                   <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20.5 8H1.5M1.5 8L8.5 1M1.5 8L8.5 15" stroke="#B3B3B3" stroke-width="2"
-                      stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M20.5 8H1.5M1.5 8L8.5 1M1.5 8L8.5 15" stroke="#B3B3B3" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
                   </svg>
                 </button>
                 <button type="button" class="events-arrows__item upcoming-events-arrows__right"
@@ -499,74 +582,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="swiper events-swiper upcoming-events-swiper">
               <div class="swiper-wrapper">
+                <?php while ($row = $upcoming_events_result->fetch_assoc()) : ?>
+                <!-- Display past events here -->
                 <div class="swiper-slide events-swiper__slide">
                   <div class="events-swiper__img">
-                    <img src="./img/SIGMA.png" width="380" height="420" alt="Sigma Dubai" loading="lazy"
-                      aria-hidden="true" />
+                    <img src="admin/dashboard/thumbnails/<?php echo htmlspecialchars($row['thumbnail']); ?>" width="380"
+                      height="420" alt="Uniclicks" loading="lazy" aria-hidden="true" />
                   </div>
-                  <div class="events-swiper__city">SIGMA x Affiliate World</div>
-                  <div class="events-swiper__caption">Dubai</div>
-                  <div class="events-swiper__date">27 February 2024</div>
+                  <div class="events-swiper__city">
+                    <?php echo htmlspecialchars($row['title']); ?>
+                  </div>
+                  <div class="events-swiper__caption">
+                    <?php echo htmlspecialchars($row['location']); ?>
+                  </div>
+                  <?php
+                        // Convert start and end dates to DateTime objects for comparison
+                        $start_date = new DateTime($row['start_date']);
+                        $end_date = new DateTime($row['end_date']);
+
+                        // Check if start and end dates are on the same day
+                        if ($start_date->format('Y-m-d') === $end_date->format('Y-m-d')) {
+                            // Display only start date
+                            echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . "</div>";
+                        } else {
+                            // Check if start and end dates are in the same month
+                            if ($start_date->format('Y-m') === $end_date->format('Y-m')) {
+                                // Display start date day and end date day month and year
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d') . " - " . $end_date->format('d, M Y') . "</div>";
+                            } else {
+                                // Display both start and end dates
+                                echo "<div class='events-swiper__date'>" . $start_date->format('d, M Y') . " - " . $end_date->format('d, M Y') . "</div>";
+                            }
+                        }
+                        ?>
                 </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <img src="./img/TT-MEETUP.png" width="380" height="420" alt="Dubai, UAE" loading="lazy"
-                      aria-hidden="true" />
-                  </div>
-                  <div class="events-swiper__city">TT Meetup</div>
-                  <div class="events-swiper__caption">Dubai, UAE</div>
-                  <div class="events-swiper__date">27 February 2024</div>
-                </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <img src="./img/AFFILIATE-WORLD-DUBAI.png" width="380" height="420" alt="TT Meetup" loading="lazy"
-                      aria-hidden="true" />
-                  </div>
-                  <div class="events-swiper__city">Affiliate</div>
-                  <div class="events-swiper__caption">World Dubai</div>
-                  <div class="events-swiper__date">27-29 February 2024</div>
-                </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <img src="./img/SIGMA.png" width="380" height="420" alt="Sigma Dubai" loading="lazy"
-                      aria-hidden="true" />
-                  </div>
-                  <div class="events-swiper__city">SIGMA x Affiliate World</div>
-                  <div class="events-swiper__caption">Dubai</div>
-                  <div class="events-swiper__date">27 February 2024</div>
-                </div>
-                <div class="swiper-slide events-swiper__slide">
-                  <div class="events-swiper__img">
-                    <div class="swiper-slide events-swiper__slide">
-                      <div class="events-swiper__img">
-                        <img src="./img/TT-MEETUP.png" width="380" height="420" alt="Dubai, UAE" loading="lazy"
-                          aria-hidden="true" />
-                      </div>
-                      <div class="events-swiper__city">TT Meetup</div>
-                      <div class="events-swiper__caption">Dubai, UAE</div>
-                      <div class="events-swiper__date">27 February 2024</div>
-                    </div>
-                    <div class="swiper-slide events-swiper__slide">
-                      <div class="events-swiper__img">
-                        <div class="swiper-slide events-swiper__slide">
-                          <div class="events-swiper__img">
-                          </div>
-                          <div class="swiper-slide events-swiper__slide">
-                            <div class="events-swiper__img">
-                              <img src="./img/AFFILIATE-WORLD-DUBAI.png" width="380" height="420" alt="TT Meetup"
-                                loading="lazy" aria-hidden="true" />
-                            </div>
-                            <div class="events-swiper__city">Affiliate</div>
-                            <div class="events-swiper__caption">World Dubai</div>
-                            <div class="events-swiper__date">27-29 February 2024</div>
-                          </div>
-                        </div>
-                      </div>
-                      <button class="btn-main events__btn triggerModalForm">
-                        Contact Us
-                      </button>
-                    </div>
-                  </div>
+                <?php endwhile; ?>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
     <footer class="footer">
@@ -621,37 +675,84 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="modal__wrapper">
         <div class="modal__content">
           <button class="modal__close modal-form__close" aria-label="Close modal window"></button>
-          <div class="form">
+          <form action="index.php" method="post"class="form">
             <div class="form__wrapper">
               <div class="form-block">
                 <h1 class="form-block__title">Send Request</h1>
+                <?php if (!empty($contact_error)) { ?>
+                    <div class="message">
+                        <p id="errorMessage" style="text-align: center; color: ;"><?php echo $contact_error; ?></div>
+                    </div>
+                <?php } else{ ?>
+                    <div class="message">
+                        <p id="successMessage" style="text-align: center; color: ;"><?php echo $contact_success; ?></div>
+                    </div>
+                <?php } ?>
                 <div class="form-block__wrap">
-                  <input type="text" class="form-block__input" placeholder="Name:" />
-                  <input type="text" class="form-block__input" placeholder="Company:" />
+                  <input type="text" name="name" id="cname" class="form-block__input" placeholder="Name:" />
+                  <input type="text" name="company" id="company" class="form-block__input" placeholder="Company:" />
                   <div class="form-block__wrapper">
                     <div class="form-block__text">Сommunication in:</div>
-                    <input class="custom-radio" name="color" type="radio" id="radio-skype" value="Skype" />
+                    <input class="custom-radio" name="communication_type" type="radio" id="radio-skype" value="Skype" />
                     <label for="radio-skype">Skype</label>
-                    <input class="custom-radio" name="color" type="radio" id="radio-telegram" value="telegram" />
+                    <input class="custom-radio" name="communication_type" type="radio" id="radio-telegram" value="Telegram" />
                     <label for="radio-telegram">Telegram</label>
-                    <input class="custom-radio" name="color" type="radio" id="radio-email" value="email" />
+                    <input class="custom-radio" name="communication_type" type="radio" id="radio-email" value="Email" />
                     <label for="radio-email">Email</label>
                   </div>
-                  <input type="text" class="form-block__input" placeholder="Your ID:" />
-                  <input type="text" class="form-block__input" placeholder="Your message:" />
+                  <input type="text" name="communication_id" id="communication_id" class="form-block__input" placeholder="Your Skype ID, Telegram, Email" />
+                  <input type="text" name="message" id="message-input" class="form-block__input" placeholder="Your message:" />
                 </div>
                 <button type="submit" class="form-block__btn">
                   Submit Request
                 </button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
+    </div>
+    <div class="popup-container" id="popup-container">
+        <div class="popup-card">
+            <div id="win-card" style="display: none;">
+                <h2>Congratulations!</h2>
+                <p>You won <span id="win-prize"></span></p>
+                <?php if (!empty($signup_error)) { ?>
+                    <div class="message">
+                        <p id="errorMessage"><?php echo $prizewon_error; ?></p>
+                    </div>
+                <?php } else { ?>
+                    <div class="message">
+                        <p id="successMessage"><?php echo $prizewon_success; ?></p>
+                    </div>
+                <?php } ?>
+                <form id="win-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="wname" name="wname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="wemail" name="wemail" required>
+                    </div>
+                    <input type="hidden" id="prize-input" name="prize" value="">
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+            </div>
+            <div id="lose-card" style="display: none;">
+                <h2>Sorry!</h2>
+                <p>Oops! <span id="lose-prize"></span> You didn't win. Try again!</p>
+                <button class="btn" onclick="closePopup()">OK</button>
+            </div>
+        </div>
     </div>
   </div>
 
   <script src="js/carousel.js"></script>
+  <script>
+    var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
+  </script>
+  <script src="js/spin.js"></script>
 </body>
 
 </html>
