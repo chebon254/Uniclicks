@@ -21,10 +21,6 @@ $events_list = "SELECT `id`, `title`, `location`, `start_date`, `end_date`, `thu
 $result_event = $conn->query($events_list);
 
 // Perform database query to fetch data
-$sql = "SELECT `id`, `full_name`, `email`, `phone`, `prize` FROM `signup_users` WHERE 1";
-$result_signup_users = $conn->query($sql);
-
-// Perform database query to fetch data
 $sql = "SELECT `spin_prizesID`, `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes` WHERE 1";
 $result_spin_prizes = $conn->query($sql);
 
@@ -274,16 +270,6 @@ $conn->close();
                         </div>
                     </div>
                 </button>
-                <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'accountstb')">
-                    <div class="contents">
-                        <div class="btn-icon">
-                            <i class="fa-regular fa-circle-user"></i>
-                        </div>
-                        <div class="btn-text">
-                            Accounts
-                        </div>
-                    </div>
-                </button>
                 <button class="dash-menu-btn tab-btn" onclick="openTab(event, 'contactstb')">
                     <div class="contents">
                         <div class="btn-icon">
@@ -484,48 +470,6 @@ $conn->close();
                                 <td><button class="winner-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
                             </tr>
                         <?php endwhile; ?>
-                        </tbody>
-                      </table>
-                      
-                </div>
-                <div id="accountstb" class="accounts-tab dash-tab-content">
-                    <div class="add-offer">
-                        <h2>User Accounts</h2>
-                        <button id=""><i class="fa-solid fa-plus"></i> Add a new user</button>
-                    </div>
-                    <table>
-                        <thead>
-                          <tr>
-                            <th>No</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone Number</th>
-                            <th>Prize</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            // Check if there are any rows returned
-                            if ($result_signup_users->num_rows > 0) {
-                                $rowNumber = 1; // Initialize row number
-                                // Loop through each row of data
-                                while ($row = $result_signup_users->fetch_assoc()) :
-                            ?>
-                                    <tr>
-                                        <td><?php echo $rowNumber++; ?></td> <!-- Increment and display row number -->
-                                        <td><?php echo $row['full_name']; ?></td>
-                                        <td><?php echo $row['email']; ?></td>
-                                        <td><?php echo $row['phone']; ?></td>
-                                        <td><?php echo $row['prize']; ?></td>
-                                        <!-- Additional table cells can be added as needed -->
-                                    </tr>
-                            <?php
-                                endwhile;
-                            } else {
-                                // No rows found, display a message or handle accordingly
-                                echo "<tr><td colspan='6'>No data found</td></tr>";
-                            }
-                            ?>
                         </tbody>
                       </table>
                       

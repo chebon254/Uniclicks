@@ -1,3 +1,35 @@
+let spinAttempts;
+
+// Check if the spin attempts entry exists in local storage
+const storedSpinAttempts = localStorage.getItem('spinAttempts');
+
+// Get the current timestamp
+const currentTimestamp = new Date().getTime();
+
+if (storedSpinAttempts) {
+    // If it exists, parse the value and store it in the spinAttempts variable
+    spinAttempts = JSON.parse(storedSpinAttempts);
+
+    // Check if two weeks have passed since the last spin attempt
+    // const twoWeeksInMilliseconds = 14 * 24 * 60 * 60 * 1000; // 14 days in milliseconds
+    const twoWeeksInMilliseconds = 60 * 1000;
+    const lastAttemptTimestamp = localStorage.getItem('lastAttemptTimestamp') || 0;
+
+    if (currentTimestamp - lastAttemptTimestamp >= twoWeeksInMilliseconds) {
+        // If two weeks have passed, reset the spin attempts to 0
+        spinAttempts = 0;
+        localStorage.setItem('spinAttempts', JSON.stringify(spinAttempts));
+    }
+} else {
+    // If it doesn't exist, initialize spinAttempts to 0
+    spinAttempts = 0;
+    // Store the initial value in local storage
+    localStorage.setItem('spinAttempts', JSON.stringify(spinAttempts));
+}
+
+// Store the current timestamp as the last attempt timestamp
+localStorage.setItem('lastAttemptTimestamp', currentTimestamp);
+
 function create_spinner() {
     var slices = spinWheelData.length;
     var sliceDeg = 360 / slices;
@@ -38,7 +70,21 @@ var isStopped = false;
 var lock = false;
 var slowDownRand = 0;
 
-function spin() {    
+function spin() {
+    // Increment the spin attempts
+    spinAttempts++;
+    // Update the local storage with the new value
+    localStorage.setItem('spinAttempts', JSON.stringify(spinAttempts));
+
+    // Check if the user has exceeded the spin attempts limit
+    if (spinAttempts > 2) {
+        document.getElementById('lose-card').style.display = 'none';
+        document.getElementById('win-card').style.display = 'none';
+        document.getElementById('exhaust-card').style.display = 'block';
+        document.getElementById('popup-container').style.display = 'flex';
+        return;
+    }
+
     var slices = spinWheelData.length;
     var sliceDeg = 360 / slices;
     deg += speed;
@@ -88,63 +134,72 @@ function spin() {
         ctx.restore();
         deg += sliceDeg;
     }
-    window.requestAnimationFrame(spin);  
+    window.requestAnimationFrame(spin);
 }
 
-setTimeout(function() {
+setTimeout(function () {
     isStopped = true;
 }, 6000);
 
 function deg2rad(deg) {
-    return deg * Math.PI/180;
+    return deg * Math.PI / 180;
 }
-        function showWinPopup(prizeTitle) {
-            document.getElementById('win-card').style.display = 'block';
-            document.getElementById('win-prize').textContent = prizeTitle;
-            document.getElementById('prize-input').value = prizeTitle;
-            document.getElementById('popup-container').style.display = 'flex';
-        }
 
-        function showLosePopup(prizeTitle) {
-            document.getElementById('lose-card').style.display = 'block';
-            document.getElementById('lose-prize').textContent = prizeTitle;
-            document.getElementById('popup-container').style.display = 'flex';
-        }
-        function closePopup() {
-                document.getElementById('popup-container').style.display = 'none';
-                document.getElementById('win-card').style.display = 'none';
-                document.getElementById('lose-card').style.display = 'none';
-            }
-        document.addEventListener('DOMContentLoaded', function() {
+function showWinPopup(prizeTitle) {
+    document.getElementById('win-card').style.display = 'block';
+    document.getElementById('win-prize').textContent = prizeTitle;
+    document.getElementById('prize-input').value = prizeTitle;
+    document.getElementById('popup-container').style.display = 'flex';
+}
 
-            document.getElementById('win-form').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const name = document.getElementById('wname').value;
-                const email = document.getElementById('wemail').value;
-                const prizeTitle = document.getElementById('prize-input').value;
+function showLosePopup(prizeTitle) {
+    document.getElementById('lose-card').style.display = 'block';
+    document.getElementById('lose-prize').textContent = prizeTitle;
+    document.getElementById('popup-container').style.display = 'flex';
+}
 
-                // Send data to the server using AJAX or fetch
-                const formData = new FormData();
-                formData.append('wname', name);
-                formData.append('wemail', email);
-                formData.append('prizeTitle', prizeTitle);
+function closePopup(isWin = false) {
+    document.getElementById('popup-container').style.display = 'none';
+    document.getElementById('win-card').style.display = 'none';
+    document.getElementById('lose-card').style.display = 'none';
 
-                fetch('', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    closePopup();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    // Reset the spin wheel if the user won
+    if (isWin) {
+        isStopped = false;
+        lock = false;
+        speed = 0;
+        deg = rand(0, 360);
+        create_spinner();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('win-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const name = document.getElementById('wname').value;
+        const email = document.getElementById('wemail').value;
+        const prizeTitle = document.getElementById('prize-input').value;
+
+        // Send data to the server using AJAX or fetch
+        const formData = new FormData();
+        formData.append('wname', name);
+        formData.append('prizeTitle', prizeTitle);
+
+        fetch('', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.text())
+            .then(data => {
+                closePopup();
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
+    });
 
-            // ... (existing code) ...
-        });
+    // ... (existing code) ...
+});
 function rand(min, max) {
     return Math.random() * (max - min) + min;
 }

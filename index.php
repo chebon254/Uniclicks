@@ -60,36 +60,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $contact_error = "Error: " . $conn->error;
     }
 }
-
 // Fetch spin wheel data from the database
-$sql = "SELECT `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes`";
-$result = $conn->query($sql);
+$spin_sql = "SELECT `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes`";
+$spin_result = $conn->query($spin_sql);
 
 $prizewon_success = "";
 $prizewon_error = "";
 
 // Store the fetched data in an array
 $spinWheelData = array();
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
+if ($spin_result->num_rows > 0) {
+    while ($row = $spin_result->fetch_assoc()) {
         $spinWheelData[] = $row;
     }
 }
 
-// // Insert winner's data into the database
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     $name = $_POST["wname"];
-//     $email = $_POST["wemail"];
-//     $prizeTitle = $_POST["prizeTitle"];
+// Insert winner's data into the database
+// Insert winner's data into the database
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  // Check if the required fields are set and not empty
+  if (isset($_POST["wname"]) && isset($_POST["wemail"]) && isset($_POST["prizeTitle"]) && !empty($_POST["wname"]) && !empty($_POST["wemail"]) && !empty($_POST["prizeTitle"])) {
+      $wname = mysqli_real_escape_string($conn, $_POST["wname"]);
+      $wemail = mysqli_real_escape_string($conn, $_POST["wemail"]);
+      $prizeTitle = mysqli_real_escape_string($conn, $_POST["prizeTitle"]);
 
-//     $sql = "INSERT INTO `winners`(`name`, `email`, `prize`) VALUES ('$name', '$email', '$prizeTitle')";
+      $win_sql = "INSERT INTO `winners` (`name`, `email`, `prize`) VALUES (?, ?, ?)";
 
-//     if ($conn->query($sql) === TRUE) {
-//         $prizewon_success = "Data inserted successfully";
-//     } else {
-//         $prizewon_error = "Error: " . $sql . "<br>" . $conn->error;
-//     }
-// }
+      // Prepare the SQL statement
+      $stmt = $conn->prepare($win_sql);
+
+      // Bind the parameters
+      $stmt->bind_param("sss", $wname, $wemail, $prizeTitle);
+
+      // Execute the statement
+      if ($stmt->execute()) {
+          $prizewon_success = "Data inserted successfully";
+      } else {
+          $prizewon_error = "Error: " . $stmt->error;
+      }
+
+      // Close the prepared statement
+      $stmt->close();
+  } else {
+      $prizewon_error = "Error: All fields are required";
+  }
+}
 
 $conn->close();
 ?>
@@ -139,85 +154,7 @@ $conn->close();
   <!-- == Icons == -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         crossorigin="anonymous" />
-        <style>
-        body{
-            position: relative;
-        }
-        .popup-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .popup-card {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-    .col-xs-12{
-        position: relative;
-        z-index: 0;
-        width: 480px !important;
-        height: 480px !important;
-        border-radius: 240px;
-        border: 10px solid #525252;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-    }
-    .spin-wheel-arrow{
-        min-height: 20px;
-        width: 20px;
-        position: absolute;
-        top:0;
-        left:50%;
-        transform: translateX(-50%);
-        color:#000000;
-        z-index: 10;
-        font-size: 28px;
-    }
-
-</style>
 </head>
-
 <body>
   <div class="wrapper" data-overlay="false">
     <header class="header">
@@ -302,7 +239,7 @@ $conn->close();
                     <canvas id="canvas" width="460" height="460"></canvas>
                 </div>
               </div> 
-              <button type="button" class="btn btn-success" onclick="spin()">Spin Now!</button>
+              <button type="button" class="btn btn-success" onclick="spin()">Spin!</button>
             </div>
             <div class="about-info">
               <h2 class="title about-info__title">About Us</h2>
@@ -726,16 +663,16 @@ $conn->close();
                         <p id="successMessage"><?php echo $prizewon_success; ?></p>
                     </div>
                 <?php } ?>
-                <form id="win-form">
+                <form id="win-form" action="index.php" method="post">
                     <div class="form-group">
-                        <label for="name">Name:</label>
+                        <label for="wname">Name:</label>
                         <input type="text" id="wname" name="wname" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email:</label>
+                        <label for="wemail">Email:</label>
                         <input type="email" id="wemail" name="wemail" required>
                     </div>
-                    <input type="hidden" id="prize-input" name="prize" value="">
+                    <input type="hidden" id="prize-input" name="prizeTitle" value="">
                     <button type="submit" class="btn">Submit</button>
                 </form>
             </div>
@@ -744,15 +681,20 @@ $conn->close();
                 <p>Oops! <span id="lose-prize"></span> You didn't win. Try again!</p>
                 <button class="btn" onclick="closePopup()">OK</button>
             </div>
+            <div id="exhaust-card" style="display: none;">
+                <h2>Sorry!</h2>
+                <p>You have exhausted your spin chances. Try again every two weeks!</p>
+                <button class="btn" onclick="closePopup()">OK</button>
+            </div>
         </div>
     </div>
   </div>
 
   <script src="js/carousel.js"></script>
-  <script>
-    var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
-  </script>
-  <script src="js/spin.js"></script>
+<script>
+var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
+</script>
+<script src="js/spin.js"></script>cr
 </body>
 
 </html>
