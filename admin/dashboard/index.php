@@ -25,7 +25,7 @@ $sql = "SELECT `spin_prizesID`, `spin_prizesTitle`, `Probability`, `BackgroundCo
 $result_spin_prizes = $conn->query($sql);
 
 // Perform database query to fetch data
-$sql = "SELECT `id`, `name`, `company`, `communication_type`, `communication_id`, `prize_id`, `prize`, `message` FROM `contact_users` WHERE 1";
+$sql = "SELECT `id`, `name`, `company`, `communication_type`, `communication_id`, `message`, `status`, `counter`, `prize_one_won`, `prize_two_won` FROM `contact_users` WHERE 1";
 $result_contact_users = $conn->query($sql);
 
 // Perform database query to fetch data
@@ -484,9 +484,11 @@ $conn->close();
                             <th>Company</th>
                             <th>Communication</th>
                             <th>ID</th>
-                            <th>Prize</th>
                             <th>Message</th>
                             <th>Status</th>
+                            <th>Counter</th>
+                            <th>Prize One</th>
+                            <th>Prize Two</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -500,10 +502,12 @@ $conn->close();
                                 <td><?php echo $row['company']; ?></td>
                                 <td><?php echo $row['communication_type']; ?></td>
                                 <td><?php echo $row['communication_id']; ?></td>
-                                <td><?php echo $row['prize']; ?></td>
                                 <td><?php echo substr($row['message'], 0, 20) . '...'; ?></td>
-                                <td><input type="checkbox"></td>
-                                <td><button class="contact-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
+                                <td><?php echo $row['status'] ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-times"></i>'; ?></td>
+                                <td><?php echo $row['counter']; ?></td>
+                                <td><?php echo $row['prize_one_won']; ?></td>
+                                <td><?php echo $row['prize_two_won']; ?></td>
+                                <td><button class="contact-view-btn" onclick="showDetails(<?php echo $row['id']; ?>)">View</button><button class="contact-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
                             </tr>
                         <?php endwhile; ?>
                         </tbody>
@@ -524,7 +528,7 @@ $conn->close();
                             <th>Location</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th></th>
+                            <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -586,6 +590,48 @@ $conn->close();
             </div>
         </div>
     </main>
+    <!-- Modal for displaying contact details -->
+    <!-- $sql = "SELECT `id`, `name`, `company`, `communication_type`, `communication_id`, `message`, `status`, `counter`, `prize_one_won`, `prize_two_won` FROM `contact_users` WHERE 1"; -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <button id="close-modal" class="close close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+            <h3>Contact Details</h3>
+            <br>
+            <br>
+            <h4>Name</h4>
+            <p id="modalName"></p>
+            <br>
+            <h4>Company</h4>
+            <p id="modalCompany"></p>
+            <br>
+            <h4>Comunication</h4>
+            <p id="modalCommunication"></p>
+            <br>
+            <h4>Communication ID</h4>
+            <div class="modal-email-container">
+                <span id="modalEmail"></span>
+                <button id="copyEmailBtn" class="modal-copy">
+                    <i class="fa-regular fa-copy"></i>
+                    <span style="font-size: 12px;" id="tooltipText"></span>
+                </button>
+            </div>
+            <br>
+            <h4>Message</h4>
+            <p id="modalMessage"></p>
+            <br>
+            <br>
+            <br>
+            <form id="messageSentForm" class="modal" style="padding: 0px; box-shadow: none;">
+                <h4>Reply Status</h4>
+                <br>
+                <label for="reply-satus">
+                <input type="checkbox" id="messageSentCheckbox"> Confirm! After replying
+                </label>
+                <br>
+                <button type="submit" class="contactbutton" style="width: fit-content; margin-top: 20px; padding: 10px 20px;">Submit!</button>
+            </form>
+        </div>
+    </div>
     <!-- == Scripts == -->
     <script src="../assets/js/script.js" defer></script>
     <script>
@@ -679,7 +725,7 @@ $conn->close();
             container.addEventListener('mouseleave', () => {
                 // Hide the delete button when mouse leaves the container
                 const contactdeleteButton = container.querySelector('.contact-delete-btn');
-                contactdeleteButton.style.visibility = 'hidden';
+                contactdeleteButton.style.visibility = 'visible';
             });
 
             // Add event listener to delete button
@@ -704,7 +750,7 @@ $conn->close();
             container.addEventListener('mouseleave', () => {
                 // Hide the delete button when mouse leaves the container
                 const deleteButton = container.querySelector('.event-delete-btn');
-                deleteButton.style.visibility = 'hidden';
+                deleteButton.style.visibility = 'visible';
             });
 
             // Add event listener to delete button
@@ -748,7 +794,7 @@ $conn->close();
             container.addEventListener('mouseleave', () => {
                 // Hide the delete button when mouse leaves the container
                 const prizedeleteButton = container.querySelector('.prize-delete-btn');
-                prizedeleteButton.style.visibility = 'hidden';
+                prizedeleteButton.style.visibility = 'visible';
             });
 
             // Add event listener to delete button
@@ -773,7 +819,7 @@ $conn->close();
             container.addEventListener('mouseleave', () => {
                 // Hide the delete button when mouse leaves the container
                 const winnerdeleteButton = container.querySelector('.winner-delete-btn');
-                winnerdeleteButton.style.visibility = 'hidden';
+                winnerdeleteButton.style.visibility = 'visible';
             });
 
             // Add event listener to delete button
@@ -782,6 +828,99 @@ $conn->close();
                 // Perform deletion logic here (will be added in the next response)
             });
         });
+    </script>
+    <script>
+        // MODAL SCRIPT
+        // Get the modal
+    var modal = document.getElementById("detailsModal");
+
+    // Get the <span> element that closes the modal
+    var closeModalBtn = document.getElementsByClassName("close-modal-btn")[0];
+
+    var messageSentForm = document.getElementById("messageSentForm");
+    var campaignSentForm = document.getElementById("campaignSentForm");
+
+    // When the user clicks on the button, open the modal and fetch contact details
+    //$sql = "SELECT `id`, `name`, `company`, `communication_type`, `communication_id`, `message`, `status`, `counter`, `prize_one_won`, `prize_two_won` FROM `contact_users` WHERE 1";
+    function showDetails(id) {
+        currentContactId = id;
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var contactDetails = JSON.parse(this.responseText);
+                document.getElementById('modalName').textContent = contactDetails.name;
+                document.getElementById('modalCompany').textContent = contactDetails.company;
+                document.getElementById('modalCommunication').textContent = contactDetails.communication_type;
+                document.getElementById('modalEmail').textContent = contactDetails.communication_id;
+                document.getElementById('modalMessage').textContent = contactDetails.message;
+                document.getElementById('messageSentCheckbox').checked = contactDetails.status;
+                modal.style.display = "block";
+            }
+        };
+        xhr.open('GET', 'fetch_contact_details.php?id=' + id, true);
+        xhr.send();
+    }
+
+    // Add event listener for the message sent form
+    messageSentForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        var messageSent = document.getElementById("messageSentCheckbox").checked;
+        var id = currentContactId;
+
+        // Send an AJAX request to update the message sent status
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "fetch_contact_details.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                // Change button text to "Success" temporarily
+                var submitButton = document.querySelector('.contactbutton');
+                if (submitButton) {
+                    submitButton.textContent = "Success";
+                    setTimeout(function() {
+                        // Revert button text back to "Submit!" after 2 seconds
+                        submitButton.textContent = "Submit!";
+                        // Reload the page after 2 seconds
+                        window.location.reload();
+                    }, 2000); // 2 seconds
+                } else {
+                    console.error("Submit button not found!");
+                }
+            }
+        };
+        xhr.send("id=" + id + "&messageSent=" + messageSent);
+    });
+
+    // Get the copy email button
+    var copyEmailBtn = document.getElementById("copyEmailBtn");
+
+    // When the user clicks on the copy email button, copy the email to clipboard
+    copyEmailBtn.onclick = function() {
+        var emailText = document.getElementById("modalEmail").textContent;
+        navigator.clipboard.writeText(emailText).then(function() {
+            var tooltipText = document.getElementById("tooltipText");
+            tooltipText.style.display = "block";
+            tooltipText.innerText = "Copied!";
+            setTimeout(function () {
+                tooltipText.style.display = "none";
+            }, 4000);
+        }).catch(function(error) {
+            console.error("Unable to copy email: ", error);
+        });
+    }
+
+
+    // When the user clicks on <span> (x), close the modal
+    closeModalBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
     </script>
 </body>
 
