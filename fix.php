@@ -19,28 +19,8 @@ $upcoming_events_result = $conn->query($upcoming_events_query);
 // Initialize error message
 $signup_error = "";
 $contact_error = "";
-$contact_success ="";
-$signup_success ="";
-
-// // Check if form is submitted
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     // Fetch and sanitize form data
-//     $full_name = mysqli_real_escape_string($conn, $_POST['full_name']);
-//     $email = mysqli_real_escape_string($conn, $_POST['email']);
-//     $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-
-//     // SQL to insert user data into the database
-//     $sql = "INSERT INTO signup_users (full_name, email, phone) VALUES ('$full_name', '$email', '$phone')";
-
-//     if ($conn->query($sql) === TRUE) {
-//         // User added successfully
-//         // Redirect to some page or display a success message
-//         $signup_success = "Signup successful";
-//     } else {
-//         // Failed to add user
-//         $signup_error = "Error: " . $conn->error;
-//     }
-// }
+$contact_success = "";
+$signup_success = "";
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -55,16 +35,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $sql = "INSERT INTO contact_users (name, company, communication_type, communication_id, message, counter) VALUES ('$name', '$company', '$communication_type', '$communication_id', '$message', 2)";
 
   if ($conn->query($sql) === TRUE) {
-      $userId = $conn->insert_id;
-      echo "<script> localStorage.setItem('userId', $userId); var canSpin = true; </script>";
-      
-      exit; 
+    // Return the insert ID
+    echo json_encode(['status' => 'success', 'id' => $conn->insert_id]);
   } else {
-      $contact_error = "Error: " . $conn->error;
-      echo json_encode(array('message' => $contact_error));
-      error_log(json_encode(array('message' => $contact_error))); // Log the error for debugging
-      exit;
+    echo json_encode(['status' => 'error', 'message' => $conn->error]);
   }
+
+  exit;
 }
 
 // Fetch spin wheel data from the database
@@ -182,7 +159,7 @@ $conn->close();
       <div class="modal__wrapper">
         <div class="modal__content">
           <button class="modal__close modal-form__close" aria-label="Close modal window"></button>
-          <form action="index.php" method="post" id="contactForm" class="form-win">
+          <form method="post" id="contactForm" class="form-win">
             <div class="form__wrapper">
               <div class="form-block">
                 <h1 class="form-block__title">Send Request</h1>
@@ -211,26 +188,75 @@ $conn->close();
         </div>
       </div>
     </div>
-    <div class="popup-container" id="popup-container">
-        <div class="popup-card">
-            <div id="win-card" style="display: none;">
-                <h2>Congratulations!</h2>
-                <p>You won <span id="win-prize"></span></p>
-                <button class="btn">OK</button>
-            </div>
-            <div id="lose-card" style="display: none;">
-                <h2>Sorry!</h2>
-                <p>Oops! <span id="lose-prize"></span> You didn't win. Try again!</p>
-                <button class="btn">OK</button>
-            </div>
-        </div>
+    <div class="popup-container" id="popup-container" style="display: none;">
+      <div class="popup-card">
+          <div id="win-card" style="display: none;">
+              <h2>Congratulations!</h2>
+              <p>You won <span id="win-prize"></span></p>
+              <button class="btn" onclick="closePopup()">OK</button>
+          </div>
+          <div id="lose-card" style="display: none;">
+              <h2>Sorry!</h2>
+              <p>Oops! <span id="lose-prize"></span> You didn't win. Try again!</p>
+              <button class="btn" onclick="closePopup()">OK</button>
+          </div>
+      </div>
     </div>
   </div>
-
+  <script>
+    function closePopup() {
+        document.getElementById('popup-container').style.display = 'none';
+    }
+</script>
   <script>
     var userId = localStorage.getItem('userId') || 0;
     console.log('Retrieved userId:', userId);
     var canSpin = userId != 0;
+  </script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  // Check if user already has a user ID stored
+  var userId = localStorage.getItem('userId');
+  if (userId) {
+    // If user ID exists, prevent form submission and show message
+    document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">You have already contacted Uniclicks!</p>`;
+    return;
+  }
+
+  // If user ID doesn't exist, proceed with form submission
+  var formData = new FormData(this);
+
+  fetch('', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.text())
+  .then(responseText => {
+    console.log("Raw response:", responseText);
+    try {
+      var data = JSON.parse(responseText);
+      if (data.status === 'success') {
+        localStorage.setItem('userId', data.id);
+        userId = data.id;
+        canSpin = true;
+        document.getElementById('formMessage').innerHTML = `<p id="successMessage" style="text-align: center; color: green;">Submission successful!</p>`;
+      } else {
+        document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred: ${data.message}</p>`;
+      }
+    } catch (e) {
+      console.error("Failed to parse JSON response: ", e);
+      console.error("Response: ", responseText);
+      document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred. Please try again!</p>`;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred. Please try again!</p>`;
+  });
+});
+
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -256,56 +282,6 @@ $conn->close();
       }
     });
   });
-  </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const contactForm = document.getElementById('contactForm');
-    const formMessage = document.getElementById('formMessage');
-
-    contactForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const formData = new FormData(contactForm);
-
-        fetch('index.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.text(); // Get the response text
-        })
-        .then(responseText => {
-            console.log('Response Text:', responseText); // Log the response text
-            try {
-                const data = JSON.parse(responseText); // Parse the response as JSON
-                console.log('JSON response:', data); // Log JSON response
-                if (data.userId) {
-                    localStorage.setItem('userId', data.userId);
-                    userId = data.userId;
-                    canSpin = true;
-                    console.log('Updated userId:', userId);
-                    console.log('Can spin:', canSpin);
-                }
-                if (data.message && data.message.includes('Message sent successfully')) {
-                    formMessage.innerHTML = `<p id="successMessage" style="text-align: center; color: green;">${data.message}</p>`;
-                    setTimeout(() => {
-                        location.reload();
-                    }, 3000);
-                } else {
-                    formMessage.innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">${data.message}</p>`;
-                }
-            } catch (error) {
-                formMessage.innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">Error: ${error.message}</p>`;
-            }
-        })
-        .catch(error => {
-            formMessage.innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">Error: ${error.message}</p>`;
-        });
-    });
-});
 </script>
 
 <script>
