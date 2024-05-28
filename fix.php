@@ -206,226 +206,186 @@ $conn->close();
     function closePopup() {
         document.getElementById('popup-container').style.display = 'none';
     }
-</script>
-  <script>
+
+    // Initialize variables
     var userId = localStorage.getItem('userId') || 0;
     console.log('Retrieved userId:', userId);
-    var canSpin = userId != 0;
-  </script>
-  <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-  e.preventDefault();
 
-  // Check if user already has a user ID stored
-  var userId = localStorage.getItem('userId');
-  if (userId) {
-    // If user ID exists, prevent form submission and show message
-    document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">You have already contacted Uniclicks!</p>`;
-    return;
-  }
-
-  // If user ID doesn't exist, proceed with form submission
-  var formData = new FormData(this);
-
-  fetch('', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.text())
-  .then(responseText => {
-    console.log("Raw response:", responseText);
-    try {
-      var data = JSON.parse(responseText);
-      if (data.status === 'success') {
-        localStorage.setItem('userId', data.id);
-        userId = data.id;
-        canSpin = true;
-        document.getElementById('formMessage').innerHTML = `<p id="successMessage" style="text-align: center; color: green;">Submission successful!</p>`;
-        // Reload the page after 4 seconds
-        setTimeout(function() {
-          location.reload();
-        }, 2500);
-      } else {
-        document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred: ${data.message}</p>`;
-      }
-    } catch (e) {
-      console.error("Failed to parse JSON response: ", e);
-      console.error("Response: ", responseText);
-      document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred. Please try again!</p>`;
+    // Get remaining spins from localStorage or initialize to 1
+    var remainingSpins = localStorage.getItem('remainingSpins');
+    if (remainingSpins === null) {
+        remainingSpins = 1;
+        localStorage.setItem('remainingSpins', remainingSpins);
+    } else {
+        remainingSpins = parseInt(remainingSpins, 10);
     }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred. Please try again!</p>`;
-  });
-});
 
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const spinButton = document.querySelector('.btn.btn-success');
-    const noSpinAlert = document.getElementById('no-spin-alert');
-    let alertTimeout;
-    //var loseText = document.getElementById('lose-text');
+    // Form submission handler
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            // if (remainingSpins === 1) {
-            //     loseText.textContent = 'Oops! You didn\'t win. Try again! This is your last chance.';
-            // } else if (remainingSpins === 0) {
-            //     loseText.textContent = 'Oops! You didn\'t win. You have no spins remaining.';
-            // } else {
-            //     loseText.textContent = 'Oops! You didn\'t win. Try again!';
-            // }
+        // Check if user already has a user ID stored
+        var userId = localStorage.getItem('userId');
+        if (userId) {
+            // If user ID exists, prevent form submission and show message
+            document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">You have already contacted Uniclicks!</p>`;
+            return;
+        }
 
-    spinButton.addEventListener('click', function() {
-      if (userId === 0) {
-        // Show the alert if userId is zero
-        noSpinAlert.style.display = 'block';
+        // If user ID doesn't exist, proceed with form submission
+        var formData = new FormData(this);
 
-        // If there's an existing timeout, clear it
-        clearTimeout(alertTimeout);
-
-        // Set a new timeout to hide the alert after 3 seconds
-        alertTimeout = setTimeout(function() {
-          noSpinAlert.style.display = 'none';
-        }, 3000); // 3 seconds
-      } else {
-        // Proceed with the spin functionality if userId is not zero
-        spin();
-      }
+        fetch('', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(responseText => {
+            console.log("Raw response:", responseText);
+            try {
+                var data = JSON.parse(responseText);
+                if (data.status === 'success') {
+                    localStorage.setItem('userId', data.id);
+                    userId = data.id;
+                    remainingSpins = 1;
+                    localStorage.setItem('remainingSpins', remainingSpins);
+                    document.getElementById('formMessage').innerHTML = `<p id="successMessage" style="text-align: center; color: green;">Submission successful!</p>`;
+                    // Reload the page after 4 seconds
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2500);
+                } else {
+                    document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred: ${data.message}</p>`;
+                }
+            } catch (e) {
+                console.error("Failed to parse JSON response: ", e);
+                console.error("Response: ", responseText);
+                document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred. Please try again!</p>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred. Please try again!</p>`;
+        });
     });
-  });
-</script>
 
-<script>
-      var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
-      function create_spinner() {
-          var slices = spinWheelData.length;
-          var sliceDeg = 360 / slices;
-          var deg = rand(0, 360);
-          var ctx = canvas.getContext('2d');
-          var width = canvas.width; // size
-          var center = width / 2;      // center
+    // Handle spin button click
+    document.addEventListener('DOMContentLoaded', function() {
+        const spinButton = document.querySelector('.btn.btn-success');
+        const noSpinAlert = document.getElementById('no-spin-alert');
+        let alertTimeout;
 
-          ctx.clearRect(0, 0, width, width);
-          for (var i = 0; i < slices; i++) {
-              ctx.beginPath();
-              ctx.fillStyle = spinWheelData[i]['BackgroundColor'];
-              ctx.moveTo(center, center);
-              ctx.arc(center, center, width / 2, deg2rad(deg), deg2rad(deg + sliceDeg));
-              ctx.lineTo(center, center);
-              ctx.fill();
-              var drawText_deg = deg + sliceDeg / 2;
-              ctx.save();
-              ctx.translate(center, center);
-              ctx.rotate(deg2rad(drawText_deg));
-              ctx.textAlign = "center"; // Adjusted to center text horizontally
-              ctx.textBaseline = "middle"; // Adjusted to center text vertically
-              ctx.fillStyle = spinWheelData[i]['TextColor'];
-              ctx.font = 'bold 15px sans-serif';
-              ctx.fillText(spinWheelData[i]['spin_prizesTitle'], 100, 5);
-              ctx.restore();
-              deg += sliceDeg;
-          }
-      }
-      create_spinner();
+        spinButton.addEventListener('click', function() {
+            if (userId === 0) {
+                // Show the alert if userId is zero
+                noSpinAlert.style.display = 'block';
 
-      var deg = rand(0, 360);
-      var speed = 0;
-      var ctx = canvas.getContext('2d');
-      var width = canvas.width; // size
-      var center = width / 2;      // center
-      var isStopped = false;
-      var lock = false;
-      var slowDownRand = 0;
+                // If there's an existing timeout, clear it
+                clearTimeout(alertTimeout);
 
-      function spin() {
-          var slices = spinWheelData.length;
-          var sliceDeg = 360 / slices;
-          deg += speed;
-          deg %= 360;
-          // Instant fast speed
-          if (!isStopped && speed < 30) {
-              speed = speed + 2;
-          }
-          // Stopped!
-          if (isStopped) {
-              if (!lock) {
-                  lock = true;
-                  slowDownRand = rand(0.986, 0.990);
-              }
-              speed = speed > 0.2 ? speed *= slowDownRand : 0;
-          }
-          // Stopped after 6 seconds
-          if (lock && !speed) {
-              var ai = Math.floor(((360 - deg - 90) % 360) / sliceDeg); // deg 2 Array Index
-              ai = (slices + ai) % slices; // Fix negative index
-              var winProbability = spinWheelData[ai]['Probability'];
-              var randomNumber = 20; // Generate a random number between 1 and 100
+                // Set a new timeout to hide the alert after 3 seconds
+                alertTimeout = setTimeout(function() {
+                    noSpinAlert.style.display = 'none';
+                }, 3000); // 3 seconds
+            } else if (remainingSpins <= 0) {
+                showLosePopup("You have exhausted your chance. Try again next time.");
+            } else {
+                // Proceed with the spin functionality if userId is not zero and remaining spins are available
+                spin();
+            }
+        });
+    });
 
-              // Check if the user won or lost
-              if (randomNumber <= winProbability) {
-                  // User won
-                  showWinPopup(spinWheelData[ai]['spin_prizesTitle']);
+    var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
+    function create_spinner() {
+        var slices = spinWheelData.length;
+        var sliceDeg = 360 / slices;
+        var deg = rand(0, 360);
+        var ctx = canvas.getContext('2d');
+        var width = canvas.width; // size
+        var center = width / 2; // center
 
-                  // Update the database with the prize won
-                  updateDatabaseWithPrizeWon(spinWheelData[ai]['spin_prizesTitle']);
-              } else {
-                  // User lost
-                  showLosePopup(spinWheelData[ai]['spin_prizesTitle']);
-              }
-          }
+        ctx.clearRect(0, 0, width, width);
+        for (var i = 0; i < slices; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = spinWheelData[i]['BackgroundColor'];
+            ctx.moveTo(center, center);
+            ctx.arc(center, center, width / 2, deg2rad(deg), deg2rad(deg + sliceDeg));
+            ctx.lineTo(center, center);
+            ctx.fill();
+            ctx.save();
 
-          ctx.clearRect(0, 0, width, width);
-          for (var i = 0; i < slices; i++) {
-              ctx.beginPath();
-              ctx.fillStyle = spinWheelData[i]['BackgroundColor'];
-              ctx.moveTo(center, center);
-              ctx.arc(center, center, width / 2, deg2rad(deg), deg2rad(deg + sliceDeg));
-              ctx.lineTo(center, center);
-              ctx.fill();
-              var drawText_deg = deg + sliceDeg / 2;
-              ctx.save();
-              ctx.translate(center, center);
-              ctx.rotate(deg2rad(drawText_deg));
-              ctx.textAlign = "center"; // Adjusted to center text horizontally
-              ctx.textBaseline = "middle"; // Adjusted to center text vertically
-              ctx.fillStyle = spinWheelData[i]['TextColor'];
-              ctx.font = 'bold 15px sans-serif';
-              ctx.fillText(spinWheelData[i]['spin_prizesTitle'], 100, 5);
-              ctx.restore();
-              deg += sliceDeg;
-          }
-          window.requestAnimationFrame(spin);
-      }
+            ctx.translate(center, center);
+            ctx.rotate(deg2rad(deg + sliceDeg / 2));
+            ctx.textAlign = "right";
+            ctx.fillStyle = spinWheelData[i]['TextColor'];
+            ctx.font = 'bold 20px sans-serif';
+            ctx.fillText(spinWheelData[i]['spin_prizesTitle'], 130, 10);
+            ctx.restore();
 
-      setTimeout(function () {
-          isStopped = true;
-      }, 6000);
+            deg += sliceDeg;
+        }
+    }
 
-      function showWinPopup(prizeName) {
-          document.getElementById('win-prize').textContent = prizeName;
-          document.getElementById('win-card').style.display = 'block';
-          document.getElementById('popup-container').style.display = 'flex';
-      }
+    create_spinner();
 
-      function showLosePopup(prizeName) {
-          document.getElementById('lose-card').style.display = 'block';
-          document.getElementById('popup-container').style.display = 'flex';
-      }
+    function deg2rad(deg) {
+        return deg * Math.PI / 180;
+    }
 
-      function deg2rad(deg) {
-          return deg * Math.PI / 180;
-      }
-      function rand(min, max) {
-          return Math.random() * (max - min) + min;
-      }
-  </script>
-  <script>
+    function rand(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function spin() {
+        if (remainingSpins <= 0) {
+            showLosePopup("You have exhausted your chance. Try again next time.");
+            return;
+        }
+
+        var count = 0;
+        var stopped = false;
+        var spinSound = new Audio('spin.mp3');
+        spinSound.play();
+
+        var targetDeg = rand(3000, 3600); // Adjust this to make the wheel spin longer
+
+        // Reduce the number of spins
+        var spinTimer = setInterval(function () {
+            count += 10;
+            canvas.style.transform = 'rotate(' + count + 'deg)';
+            if (count >= targetDeg) {
+                clearInterval(spinTimer);
+                spinSound.pause();
+                spinSound.currentTime = 0;
+                stopped = true;
+
+                // Determine prize won based on stop position
+                var actualDeg = count % 360;
+                var prizeIndex = Math.floor(actualDeg / (360 / spinWheelData.length));
+                var prizeName = spinWheelData[prizeIndex].spin_prizesTitle;
+
+                updateDatabaseWithPrizeWon(prizeName);
+
+                if (prizeName !== "Try Again") {
+                    showWinPopup(prizeName);
+                } else {
+                    showLosePopup("You have exhausted your chance. Try again next time.");
+                }
+
+                remainingSpins--;
+                localStorage.setItem('remainingSpins', remainingSpins);
+            }
+        }, 20);
+
+        if (stopped) {
+            clearInterval(spinTimer);
+        }
+    }
+
     function updateDatabaseWithPrizeWon(prizeName) {
-        // Send an AJAX request to update the database with the prize won
-        // Assuming you're using jQuery for AJAX requests
         $.ajax({
-            url: 'update_prize_won.php', // Replace with the appropriate URL
+            url: 'update_prize_won.php',
             method: 'POST',
             data: {
                 userId: userId,
@@ -433,14 +393,27 @@ $conn->close();
             },
             success: function(response) {
                 console.log('Database updated with prize won:', response);
-                decrementCounterInDatabase(); // Decrement the counter after updating the prize
             },
             error: function(xhr, status, error) {
                 console.error('Error updating database:', error);
             }
         });
     }
-  </script>
+
+    function showWinPopup(prizeName) {
+        document.getElementById('win-prize').textContent = prizeName;
+        document.getElementById('win-card').style.display = 'block';
+        document.getElementById('lose-card').style.display = 'none';
+        document.getElementById('popup-container').style.display = 'flex';
+    }
+
+    function showLosePopup(message) {
+        document.getElementById('lose-text').textContent = message;
+        document.getElementById('lose-card').style.display = 'block';
+        document.getElementById('win-card').style.display = 'none';
+        document.getElementById('popup-container').style.display = 'flex';
+    }
+</script>
 </body>
 
 </html>
