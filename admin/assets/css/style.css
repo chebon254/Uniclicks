@@ -1,7 +1,15 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
 * {
     margin: 0px;
     padding: 0px;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     list-style: none;
     text-decoration: none;
     font-family: "Inter", sans-serif;
@@ -83,20 +91,34 @@ main.login-pg {
     height: 100%;
     width: 100%;
     padding: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .login-pg-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
     padding: 20px;
     background-color: var(--crystal);
     border-radius: 20px;
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 }
 
 .login-pg-container .card {
@@ -107,9 +129,15 @@ main.login-pg {
 }
 
 .login-pg-container .card.one {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .login-pg-container .card.one img {
@@ -193,7 +221,9 @@ textarea{
     position: absolute;
     top: 50%;
     left: 10px;
-    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
     cursor: pointer;
     font-size: 20px;
     color: var(--verdant);
@@ -212,7 +242,9 @@ textarea{
     position: absolute;
     top: 50%;
     left: 10px;
-    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
     cursor: pointer;
     font-size: 20px;
     color: var(--verdant);
@@ -222,7 +254,9 @@ textarea{
     position: absolute;
     top: 50%;
     right: 10px;
-    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
     cursor: pointer;
 }
 
@@ -230,7 +264,9 @@ textarea{
     position: absolute;
     top: 50%;
     right: 10px;
-    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
     cursor: pointer;
 }
 
@@ -279,9 +315,15 @@ p.back-link a:hover {
 main.dashboard-pg {
     height: 100%;
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
 }
 
 .side-navigation {
@@ -293,9 +335,15 @@ main.dashboard-pg {
 
 .side-logo {
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
 }
 
 .side-logo img.icon {
@@ -339,17 +387,29 @@ main.dashboard-pg {
 .side-menu button.tab-btn .contents {
     height: 100%;
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
 }
 
 .side-menu button.tab-btn .btn-icon {
     height: 40px;
     width: 40px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     font-size: 18px;
 }
 
@@ -398,14 +458,22 @@ button.side-btn-logout:hover,
     z-index: 1;
     top: -25px;
     left: 50%;
-    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
     height: 50px;
     width: 50px;
     border-radius: 25px;
     background-color: var(--crystal);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .side-menu-infocard .icon i {
@@ -435,9 +503,15 @@ button.side-btn-logout:hover,
 
 .dash-header {
     padding: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
 }
 
 .header-txt h1 {
@@ -457,9 +531,15 @@ button.side-btn-logout:hover,
 }
 
 .header-account {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
 }
 
 .dropdown-menu {
@@ -477,6 +557,8 @@ button.side-btn-logout:hover,
 .nav-item a i {
     color: var(--mist);
     font-size: 1.2rem;
+    -webkit-transition: color 0.3s;
+    -o-transition: color 0.3s;
     transition: color 0.3s;
 }
 
@@ -504,7 +586,8 @@ button.side-btn-logout:hover,
     min-width: 240px;
     overflow: hidden;
     width: 100%;
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 }
 
 .dropdown-menu a,
@@ -513,6 +596,8 @@ button.side-btn-logout:hover,
     padding: 10px 16px;
     text-decoration: none;
     display: block;
+    -webkit-transition: background-color 0.3s, color 0.3s;
+    -o-transition: background-color 0.3s, color 0.3s;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -527,8 +612,11 @@ button.side-btn-logout:hover,
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     border: 2px solid var(--verdant);
+    -webkit-transition: border-color 0.3s;
+    -o-transition: border-color 0.3s;
     transition: border-color 0.3s;
 }
 
@@ -548,11 +636,20 @@ button.side-btn-logout:hover,
 .dash-campaign {
     margin-top: 28px;
     width: 100%;
-    flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    align-items: stretch;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: flex-start;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
 }
 
 .dash-campaign .create {
@@ -605,9 +702,15 @@ button.side-btn-logout:hover,
 }
 
 .stats .cards {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
     padding: 10px 0px 0px;
 }
 
@@ -622,21 +725,35 @@ button.side-btn-logout:hover,
 }
 
 .db-cards {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
 }
 
 .db-cards .card {
     height: 240px;
     width: 240px;
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
     border-radius: 20px;
     margin: 10px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     text-align: center;
 }
 
@@ -683,7 +800,8 @@ th {
 }
 
 iframe {
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
 }
 
 td {
@@ -761,9 +879,15 @@ img.dash-events-thumb {
 /* == TAB content forms == */
 .add-offer {
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
     margin: 0px 0px 0px 0px;
 }
 
@@ -798,9 +922,15 @@ img.dash-events-thumb {
 .prizestb-form .inner {
     height: 100%;
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 /* Initially hide the delete button */
@@ -813,7 +943,8 @@ img.dash-events-thumb {
     border-radius: 25px;
     outline: none;
     cursor: pointer !important;
-    box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
+            box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
     margin: 0px 5px 0px 0px;
 }
 .event-delete-btn,
@@ -831,7 +962,8 @@ img.dash-events-thumb {
     border-radius: 25px;
     outline: none;
     cursor: pointer !important;
-    box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
+            box-shadow: rgba(38, 157, 112, 0.1) 0px 8px 24px, rgba(38, 157, 112, 0.1) 0px 16px 56px, rgba(38, 157, 112, 0.1) 0px 24px 80px;
 }
 .contactbutton{
     width: 120px !important;
@@ -841,6 +973,8 @@ img.dash-events-thumb {
 .contact-delete-btn:hover,
 .winner-delete-btn:hover,
 .prize-delete-btn:hover {
+    -webkit-transition: all ease-in 200ms;
+    -o-transition: all ease-in 200ms;
     transition: all ease-in 200ms;
     visibility: hidden;
     padding: 4px 20px;
@@ -849,7 +983,8 @@ img.dash-events-thumb {
     border: 0px;
     border-radius: 25px;
     outline: none;
-    box-shadow: rgba(255, 0, 0, 0.1) 0px 8px 24px, rgba(255, 0, 0, 0.1) 0px 16px 56px, rgba(255, 0, 0, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(255, 0, 0, 0.1) 0px 8px 24px, rgba(255, 0, 0, 0.1) 0px 16px 56px, rgba(255, 0, 0, 0.1) 0px 24px 80px;
+            box-shadow: rgba(255, 0, 0, 0.1) 0px 8px 24px, rgba(255, 0, 0, 0.1) 0px 16px 56px, rgba(255, 0, 0, 0.1) 0px 24px 80px;
 }
 
 .form-container {
@@ -859,7 +994,8 @@ img.dash-events-thumb {
     padding: 16px;
     border-radius: 20px;
     background-color: var(--crystal);
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 }
 
 .cancel-btn-form {
@@ -872,7 +1008,8 @@ img.dash-events-thumb {
     cursor: pointer;
     outline: none;
     border: 0px;
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+    -webkit-box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+            box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 }
 
 .cancel-btn-form:hover {
@@ -887,13 +1024,16 @@ img.dash-events-thumb {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
     width: 100%;
     max-width: 1000px;
     margin: 20px;
     padding: 20px;
     border-radius: 20px;
-    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
     background-color: #ffffff;
   }
   #detailsModal button.close{
@@ -915,9 +1055,15 @@ img.dash-events-thumb {
     color: #2b1d4f;
     font-size: 18px;
     cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     position: relative;
     margin-left: 10px
   }
@@ -942,8 +1088,14 @@ img.dash-events-thumb {
     text-align: center;
   }
   .modal-email-container{
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
   }
 /* == || Dashboard == */
