@@ -1257,7 +1257,24 @@ picture {
           align-items: center;
   z-index: 9999;
 }
-
+#lose-card, #win-card{
+  background-color: #ffffff !important;
+  border-radius: 10px;
+  padding: 20px 30px;
+  text-align: center !important;
+}
+#lose-card h2, #win-card h2{
+  font-weight: 700 !important;
+}
+.popup-container p{
+  margin: 10px 0px 20px !important;
+}
+.popup-container .btn{
+  background-color: #269d70 !important;
+}
+.popup-container .btn:hover{
+  background-color: #1a6b4c !important;
+}
 .popup-card {
   background-color: #fff;
   padding: 20px;

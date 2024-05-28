@@ -190,11 +190,13 @@ $conn->close();
     <div class="popup-container" id="popup-container" style="display: none;">
       <div class="popup-card">
           <div id="win-card" style="display: none;">
+            <img src="img/win trophy.gif"/>
               <h2>Congratulations!</h2>
               <p>You won <span id="win-prize"></span></p>
               <button class="btn" onclick="closePopup()">OK</button>
           </div>
           <div id="lose-card" style="display: none;">
+          <img src="img/loss.gif"/>
               <h2>Sorry!</h2>
               <p id="lose-text"></p>
               <button class="btn" onclick="closePopup()">OK</button>
@@ -317,9 +319,9 @@ $conn->close();
 
             ctx.translate(center, center);
             ctx.rotate(deg2rad(deg + sliceDeg / 2));
-            ctx.textAlign = "right";
+            ctx.textAlign = "center";
             ctx.fillStyle = spinWheelData[i]['TextColor'];
-            ctx.font = 'bold 20px sans-serif';
+            ctx.font = 'bold 16px sans-serif';
             ctx.fillText(spinWheelData[i]['spin_prizesTitle'], 130, 10);
             ctx.restore();
 
@@ -345,7 +347,7 @@ $conn->close();
 
         var count = 0;
         var stopped = false;
-        var spinSound = new Audio('spin.mp3');
+        var spinSound = new Audio('assets/spin.mp3');
         spinSound.play();
 
         var targetDeg = rand(3000, 3600); // Adjust this to make the wheel spin longer
