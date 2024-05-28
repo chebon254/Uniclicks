@@ -109,7 +109,6 @@ $conn->close();
         crossorigin="anonymous" />
   <!-- Include jQuery from a CDN -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
 </head>
 <body>
   <div class="wrapper" data-overlay="false">
@@ -197,7 +196,7 @@ $conn->close();
           </div>
           <div id="lose-card" style="display: none;">
               <h2>Sorry!</h2>
-              <p>Oops! <span id="lose-prize"></span> You didn't win. Try again!</p>
+              <p id="lose-text"></p>
               <button class="btn" onclick="closePopup()">OK</button>
           </div>
       </div>
@@ -242,6 +241,10 @@ $conn->close();
         userId = data.id;
         canSpin = true;
         document.getElementById('formMessage').innerHTML = `<p id="successMessage" style="text-align: center; color: green;">Submission successful!</p>`;
+        // Reload the page after 4 seconds
+        setTimeout(function() {
+          location.reload();
+        }, 2500);
       } else {
         document.getElementById('formMessage').innerHTML = `<p id="errorMessage" style="text-align: center; color: red;">An error occurred: ${data.message}</p>`;
       }
@@ -263,6 +266,15 @@ $conn->close();
     const spinButton = document.querySelector('.btn.btn-success');
     const noSpinAlert = document.getElementById('no-spin-alert');
     let alertTimeout;
+    //var loseText = document.getElementById('lose-text');
+
+            // if (remainingSpins === 1) {
+            //     loseText.textContent = 'Oops! You didn\'t win. Try again! This is your last chance.';
+            // } else if (remainingSpins === 0) {
+            //     loseText.textContent = 'Oops! You didn\'t win. You have no spins remaining.';
+            // } else {
+            //     loseText.textContent = 'Oops! You didn\'t win. Try again!';
+            // }
 
     spinButton.addEventListener('click', function() {
       if (userId === 0) {
@@ -348,14 +360,21 @@ $conn->close();
               var ai = Math.floor(((360 - deg - 90) % 360) / sliceDeg); // deg 2 Array Index
               ai = (slices + ai) % slices; // Fix negative index
               var winProbability = spinWheelData[ai]['Probability'];
-              var randomNumber = 21;
+              var randomNumber = 20; // Generate a random number between 1 and 100
 
-              if (randomNumber > winProbability) {
+              // Check if the user won or lost
+              if (randomNumber <= winProbability) {
+                  // User won
                   showWinPopup(spinWheelData[ai]['spin_prizesTitle']);
+
+                  // Update the database with the prize won
+                  updateDatabaseWithPrizeWon(spinWheelData[ai]['spin_prizesTitle']);
               } else {
+                  // User lost
                   showLosePopup(spinWheelData[ai]['spin_prizesTitle']);
               }
           }
+
           ctx.clearRect(0, 0, width, width);
           for (var i = 0; i < slices; i++) {
               ctx.beginPath();
@@ -383,12 +402,44 @@ $conn->close();
           isStopped = true;
       }, 6000);
 
+      function showWinPopup(prizeName) {
+          document.getElementById('win-prize').textContent = prizeName;
+          document.getElementById('win-card').style.display = 'block';
+          document.getElementById('popup-container').style.display = 'flex';
+      }
+
+      function showLosePopup(prizeName) {
+          document.getElementById('lose-card').style.display = 'block';
+          document.getElementById('popup-container').style.display = 'flex';
+      }
+
       function deg2rad(deg) {
           return deg * Math.PI / 180;
       }
       function rand(min, max) {
           return Math.random() * (max - min) + min;
       }
+  </script>
+  <script>
+    function updateDatabaseWithPrizeWon(prizeName) {
+        // Send an AJAX request to update the database with the prize won
+        // Assuming you're using jQuery for AJAX requests
+        $.ajax({
+            url: 'update_prize_won.php', // Replace with the appropriate URL
+            method: 'POST',
+            data: {
+                userId: userId,
+                prizeName: prizeName
+            },
+            success: function(response) {
+                console.log('Database updated with prize won:', response);
+                decrementCounterInDatabase(); // Decrement the counter after updating the prize
+            },
+            error: function(xhr, status, error) {
+                console.error('Error updating database:', error);
+            }
+        });
+    }
   </script>
 </body>
 
