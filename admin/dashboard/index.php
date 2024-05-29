@@ -15,22 +15,31 @@ $success = "";
 // Fetch contact form data
 $top_offers = "SELECT `id`, `offer`, `monthly_clicks`, `monthly_payouts` FROM `top_offers`";
 $result_offers = $conn->query($top_offers);
+$total_top_offers = $result_offers->num_rows; // Count total rows fetched
 
-// Fetch contact form data
+// Fetch events data
 $events_list = "SELECT `id`, `title`, `location`, `start_date`, `end_date`, `thumbnail` FROM `events`";
 $result_event = $conn->query($events_list);
+$total_events = $result_event->num_rows; // Count total rows fetched
 
-// Perform database query to fetch data
+// Fetch spin prizes data
 $sql = "SELECT `spin_prizesID`, `spin_prizesTitle`, `Probability`, `BackgroundColor`, `TextColor` FROM `spin_prizes` WHERE 1";
 $result_spin_prizes = $conn->query($sql);
+$total_spin_prizes = $result_spin_prizes->num_rows; // Count total rows fetched
 
-// Perform database query to fetch data
+// Fetch contact users data
 $sql = "SELECT `id`, `name`, `company`, `communication_type`, `communication_id`, `message`, `status`, `counter`, `prize_one_won`, `prize_two_won` FROM `contact_users` WHERE 1";
 $result_contact_users = $conn->query($sql);
+$total_contact_users = $result_contact_users->num_rows; // Count total rows fetched
 
-// Perform database query to fetch data
+// Fetch winners data
 $sql = "SELECT `id`, `name`, `email`, `prize` FROM `winners` WHERE 1";
 $result_winners = $conn->query($sql);
+$total_winners = $result_winners->num_rows; // Count total rows fetched
+
+// Calculate total data amount
+$total_data_amount = $total_top_offers + $total_events + $total_spin_prizes + $total_contact_users + $total_winners;
+
 
 // Close database connection
 $conn->close();
@@ -364,8 +373,7 @@ $conn->close();
                             <h1>Create prizes for your visitors</h1>
                             <p>Keep your visitors engaged and retained by creating games and prices <br> to be won</p>
                             <div class="create-btns">
-                                <button class="btn-create-prize">Create Prize</button>
-                                <button class="btn-view-campaign">View stats</button>
+                                <button class="btn-create-prize" onclick="openTab(event, 'prizestb')">Create Prize</button>
                             </div>
                         </div>
                         <div class="stats">
@@ -373,11 +381,11 @@ $conn->close();
                             <div class="cards">
                                 <div class="card">
                                     <h4>Today</h4>
-                                    <span>4 users</span>
+                                    <span><?php echo $total_contact_users; ?> users</span>
                                 </div>
                                 <div class="card">
                                     <h4>This Month</h4>
-                                    <span>40 users</span>
+                                    <span><?php echo $total_contact_users; ?> users</span>
                                 </div>
                             </div>
                         </div>
@@ -387,25 +395,25 @@ $conn->close();
                         <div class="db-cards">
                             <div class="card">
                                 <div class="card-content">
-                                    <h1>6</h1>
+                                    <h1><?php echo $total_top_offers; ?></h1>
                                     <span>Offers</span>
                                 </div>
                             </div>
                             <div class="card">
                                 <div class="card-content">
-                                    <h1>100</h1>
-                                    <span>Users</span>
+                                    <h1><?php echo $total_events; ?></h1>
+                                    <span>Events</span>
                                 </div>
                             </div>
                             <div class="card">
                                 <div class="card-content">
-                                    <h1>40</h1>
+                                    <h1><?php echo $total_contact_users; ?></h1>
                                     <span>Contacts</span>
                                 </div>
                             </div>
                             <div class="card">
                                 <div class="card-content">
-                                    <h1>6</h1>
+                                    <h1><?php echo $total_spin_prizes; ?></h1>
                                     <span>Prizes</span>
                                 </div>
                             </div>
@@ -486,9 +494,7 @@ $conn->close();
                             <th>ID</th>
                             <th>Message</th>
                             <th>Status</th>
-                            <th>Counter</th>
-                            <th>Prize One</th>
-                            <th>Prize Two</th>
+                            <th>Prize Won</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -504,9 +510,7 @@ $conn->close();
                                 <td><?php echo $row['communication_id']; ?></td>
                                 <td><?php echo substr($row['message'], 0, 20) . '...'; ?></td>
                                 <td><?php echo $row['status'] ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-times"></i>'; ?></td>
-                                <td><?php echo $row['counter']; ?></td>
                                 <td><?php echo $row['prize_one_won']; ?></td>
-                                <td><?php echo $row['prize_two_won']; ?></td>
                                 <td><button class="contact-view-btn" onclick="showDetails(<?php echo $row['id']; ?>)">View</button><button class="contact-delete-btn" data-id="<?php echo $row['id']; ?>">Delete</button></td>
                             </tr>
                         <?php endwhile; ?>
@@ -676,7 +680,7 @@ $conn->close();
         document.querySelectorAll('.contact-delete-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const eventId = this.getAttribute('data-id');
-                if (confirm('Are you sure you want to delete this event?')) {
+                if (confirm('Are you sure you want to delete this contact?')) {
                     fetch('./delete_contact.php?id=' + eventId, { method: 'POST' })
                         .then(response => {
                             if (response.ok) {
@@ -695,7 +699,7 @@ $conn->close();
         document.querySelectorAll('.winner-delete-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const eventId = this.getAttribute('data-id');
-                if (confirm('Are you sure you want to delete this event?')) {
+                if (confirm('Are you sure you want to delete this win?')) {
                     fetch('./delete_winner.php?id=' + eventId, { method: 'POST' })
                         .then(response => {
                             if (response.ok) {
@@ -764,7 +768,7 @@ $conn->close();
         document.querySelectorAll('.prize-delete-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const offerId = this.getAttribute('data-id');
-                if (confirm('Are you sure you want to delete this offer?')) {
+                if (confirm('Are you sure you want to delete this prize?')) {
                     fetch('./prize_delete.php?id=' + offerId, { method: 'POST' })
                         .then(response => {
                             if (response.ok) {

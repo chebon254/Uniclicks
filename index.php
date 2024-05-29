@@ -712,6 +712,7 @@ $conn->close();
     });
 
     var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
+
     function create_spinner() {
         var slices = spinWheelData.length;
         var sliceDeg = 360 / slices;
@@ -759,17 +760,20 @@ $conn->close();
         }
 
         var count = 0;
+        var spinSpeed = 60; // Initial speed
+        var deceleration = 0.992; // Deceleration factor to ensure 8-second spin
+        var targetDeg = rand(3000, 3600); // Adjust this to make the wheel spin longer
         var stopped = false;
         var spinSound = new Audio('assets/spin.mp3');
         spinSound.play();
 
-        var targetDeg = rand(3000, 3600); // Adjust this to make the wheel spin longer
+        var startTime = Date.now();
 
-        // Reduce the number of spins
         var spinTimer = setInterval(function () {
-            count += 10;
-            canvas.style.transform = 'rotate(' + count + 'deg)';
-            if (count >= targetDeg) {
+            var currentTime = Date.now();
+            var elapsedTime = (currentTime - startTime) / 1000;
+
+            if (elapsedTime >= 8) {
                 clearInterval(spinTimer);
                 spinSound.pause();
                 spinSound.currentTime = 0;
@@ -790,7 +794,12 @@ $conn->close();
 
                 remainingSpins--;
                 localStorage.setItem('remainingSpins', remainingSpins);
+                return;
             }
+
+            count += spinSpeed;
+            spinSpeed *= deceleration; // Gradually decrease the speed
+            canvas.style.transform = 'rotate(' + count + 'deg)';
         }, 20);
 
         if (stopped) {
@@ -828,6 +837,8 @@ $conn->close();
         document.getElementById('win-card').style.display = 'none';
         document.getElementById('popup-container').style.display = 'flex';
     }
-</script>    
+</script>
+
+ 
 </body>
 </html>
