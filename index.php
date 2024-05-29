@@ -736,7 +736,7 @@ $conn->close();
             ctx.textAlign = "center";
             ctx.fillStyle = spinWheelData[i]['TextColor'];
             ctx.font = 'bold 16px sans-serif';
-            ctx.fillText(spinWheelData[i]['spin_prizesTitle'], 130, 10);
+            ctx.fillText(spinWheelData[i]['spin_prizesTitle'], 100, 5);
             ctx.restore();
 
             deg += sliceDeg;
@@ -800,7 +800,7 @@ $conn->close();
             count += spinSpeed;
             spinSpeed *= deceleration; // Gradually decrease the speed
             canvas.style.transform = 'rotate(' + count + 'deg)';
-        }, 20);
+        }, 21);
 
         if (stopped) {
             clearInterval(spinTimer);

@@ -687,8 +687,6 @@ $conn->close();
       }
     });
   });
-  </script>
-<script>
     document.addEventListener('DOMContentLoaded', function() {
         const contactform = document.getElementById('contactForm');
         const formMessage = document.getElementById('formMessage');
@@ -721,9 +719,6 @@ $conn->close();
             });
         });
     });
-</script>
-
-<script>
       var spinWheelData = <?php echo json_encode($spinWheelData); ?>;
       function create_spinner() {
           var slices = spinWheelData.length;
