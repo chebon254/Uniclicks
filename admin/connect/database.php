@@ -1,4 +1,6 @@
 <?php
+require 'vendor/autoload.php'; // Ensure Composer autoload is included
+
 // Database connection details
 $servername = "localhost";
 $username = "u988435817_adminuniclicks";
@@ -13,38 +15,49 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Load environment variables from `.env` file
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+try {
+    // Load environment variables from `.env` file
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+} catch (Exception $e) {
+    die("Error loading .env file: " . $e->getMessage());
+}
 
-// Get the API token from the environment variable
-$apiToken = $_ENV['MONDAY_API_TOKEN'];
+$apiToken = $_ENV['MONDAY_API_TOKEN'] ?? null;
+if (!$apiToken) {
+    die("API token not set in environment variables.");
+}
 
-// Initialize Guzzle client
-$client = new \GuzzleHttp\Client([
-    'base_uri' => 'https://api.monday.com/v2/',
-    'headers' => [
-        'Authorization' => $apiToken,
-        'Content-Type' => 'application/json',
-    ],
-]);
+try {
+    $client = new \GuzzleHttp\Client([
+        'base_uri' => 'https://api.monday.com/v2/',
+        'headers' => [
+            'Authorization' => $apiToken,
+            'Content-Type' => 'application/json',
+        ],
+    ]);
+} catch (Exception $e) {
+    die("Error initializing Guzzle client: " . $e->getMessage());
+}
 
-// Define the tables you want to synchronize
+// Define tables and their corresponding board IDs
 $tables = [
-    'contact_users',
-    'events',
-    'spin_prizes',
-    'top_offers',
-    'winners',
+    'contact_users' => 'BOARD_ID_CONTACT_USERS',
+    'events' => 'BOARD_ID_EVENTS',
+    'spin_prizes' => 'BOARD_ID_SPIN_PRIZES',
+    'top_offers' => 'BOARD_ID_TOP_OFFERS',
+    'winners' => 'BOARD_ID_WINNERS',
     // Add more tables as needed
 ];
 
-// Loop through each table and synchronize data
-foreach ($tables as $table) {
+foreach ($tables as $table => $boardId) {
     $sql = "SELECT * FROM $table";
     $result = $conn->query($sql);
 
-    // Loop through the result set and create items on Monday.com board
+    if (!$result) {
+        die("Error executing query on table $table: " . $conn->error);
+    }
+
     foreach ($result as $row) {
         $userData = [];
         foreach ($row as $key => $value) {
@@ -52,20 +65,18 @@ foreach ($tables as $table) {
         }
 
         try {
-            $response = $client->post("boards/BOARD_ID/items", [
+            $response = $client->post("boards/$boardId/items", [
                 'json' => $userData,
             ]);
 
-            // Handle the response
             $responseData = json_decode($response->getBody()->getContents(), true);
-            // Add your desired logic here to handle the response
-            // ...
+            // Handle the response
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-            // Handle the exception
-            echo $e->getMessage();
+            echo "Error posting data to board $boardId: " . $e->getMessage();
         }
     }
 }
 
 // Close the database connection
 $conn->close();
+?>
