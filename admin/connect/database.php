@@ -86,22 +86,25 @@ foreach ($tables as $table => $boardId) {
         }
     }
 
-    // Step 3: Optionally, delete existing columns on the board that are no longer needed
+    // Step 3: Delete columns on the board that are no longer needed
+    try {
+        // Fetch existing columns
+        $response = $client->get("boards/$boardId/columns");
+        $existingColumns = json_decode($response->getBody()->getContents(), true);
 
-    Fetch existing columns (if needed)
-    $response = $client->get("boards/$boardId/columns");
-    $existingColumns = json_decode($response->getBody()->getContents(), true);
-
-    Example: Delete columns (adjust as per your logic)
-    foreach ($existingColumns['columns'] as $column) {
-        if (!in_array($column['title'], $columns)) {
-            try {
-                $response = $client->delete("columns/{$column['id']}");
-                // Handle delete response
-            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-                echo "Error deleting column {$column['id']}: " . $e->getMessage();
+        // Delete columns not in $columns array
+        foreach ($existingColumns['columns'] as $column) {
+            if (!in_array($column['title'], $columns)) {
+                try {
+                    $response = $client->delete("columns/{$column['id']}");
+                    // Handle delete response
+                } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                    echo "Error deleting column {$column['id']}: " . $e->getMessage();
+                }
             }
         }
+    } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+        echo "Error fetching columns from board $boardId: " . $e->getMessage();
     }
 }
 
