@@ -162,6 +162,9 @@ $conn->close();
         </div>
       </div>
     </header>
+    <section>
+      <h1 style="font-size: 100px; font-weight: 900;">Test</h1>
+    </section>
     <main>
       <section class="hero">
         <div class="container">
